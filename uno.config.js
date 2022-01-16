@@ -34,10 +34,6 @@ export default {
       },
     },
   },
-  rules: [
-    // your custom rules
-  ],
-  shortcuts: [
-    // shortcuts to multiple utilities
-  ],
+  rules: [],
+  shortcuts: [],
 };
