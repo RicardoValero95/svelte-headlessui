@@ -1,4 +1,5 @@
 import type { SvelteComponent } from "svelte";
+
 import A from "./A.svelte";
 import Address from "./Address.svelte";
 import Article from "./Article.svelte";
@@ -13,9 +14,9 @@ import Code from "./Code.svelte";
 import Data from "./Data.svelte";
 import Datalist from "./Datalist.svelte";
 import Dd from "./Dd.svelte";
+import Div from "./Div.svelte";
 import Dl from "./Dl.svelte";
 import Dt from "./Dt.svelte";
-import Div from "./Div.svelte";
 import Em from "./Em.svelte";
 import Footer from "./Footer.svelte";
 import Form from "./Form.svelte";

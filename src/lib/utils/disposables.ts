@@ -1,9 +1,9 @@
 export function disposables() {
-  let disposables: Function[] = [];
+  const disposables: Function[] = [];
 
-  let api = {
+  const api = {
     requestAnimationFrame(...args: Parameters<typeof requestAnimationFrame>) {
-      let raf = requestAnimationFrame(...args);
+      const raf = requestAnimationFrame(...args);
       api.add(() => cancelAnimationFrame(raf));
     },
 
@@ -14,7 +14,7 @@ export function disposables() {
     },
 
     setTimeout(...args: Parameters<typeof setTimeout>) {
-      let timer = setTimeout(...args);
+      const timer = setTimeout(...args);
       api.add(() => clearTimeout(timer));
     },
 
@@ -23,7 +23,7 @@ export function disposables() {
     },
 
     dispose() {
-      for (let dispose of disposables.splice(0)) {
+      for (const dispose of disposables.splice(0)) {
         dispose();
       }
     },

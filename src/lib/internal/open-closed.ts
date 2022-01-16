@@ -6,15 +6,16 @@ export enum State {
   Closed,
 }
 
-const OPEN_CLOSED_CONTEXT_NAME = "headlessui-open-closed-context";
+const OPEN_CLOSED_CONTEXT = Symbol("headlessui-open-closed-context");
+
 export function hasOpenClosed() {
   return useOpenClosed() !== undefined;
 }
 
 export function useOpenClosed(): Readable<State> | undefined {
-  return getContext(OPEN_CLOSED_CONTEXT_NAME);
+  return getContext(OPEN_CLOSED_CONTEXT);
 }
 
 export function useOpenClosedProvider(value: Writable<State>) {
-  setContext(OPEN_CLOSED_CONTEXT_NAME, value);
+  setContext(OPEN_CLOSED_CONTEXT, value);
 }

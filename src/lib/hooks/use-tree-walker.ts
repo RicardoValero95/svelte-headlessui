@@ -16,18 +16,18 @@ export function treeWalker({
   walk(node: HTMLElement): void;
   enabled?: boolean;
 }) {
-  let root = container;
+  const root = container;
   if (!root) return;
   if (enabled !== undefined && !enabled) return;
 
-  let acceptNode = Object.assign((node: HTMLElement) => accept(node), {
+  const acceptNode = Object.assign((node: HTMLElement) => accept(node), {
     acceptNode: accept,
   });
-  let walker = document.createTreeWalker(
+  const walker = document.createTreeWalker(
     root,
     NodeFilter.SHOW_ELEMENT,
     acceptNode,
-    // @ts-ignore-error Typescript bug thinks this can only have 3 args
+    // @ts-expect-error Typescript bug thinks this can only have 3 args
     false
   );
 

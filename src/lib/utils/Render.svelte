@@ -1,10 +1,4 @@
 <script lang="ts" context="module">
-  import {
-    getElementComponent,
-    SupportedElement,
-  } from "$lib/internal/elements";
-  import { get_current_component, SvelteComponent } from "svelte/internal";
-
   export enum Features {
     /** No features at all */
     None = 0,
@@ -32,8 +26,15 @@
 </script>
 
 <script lang="ts">
+  import { get_current_component, SvelteComponent } from "svelte/internal";
+
   import type { ActionArray } from "$lib/hooks/use-actions";
+  import {
+    getElementComponent,
+    SupportedElement,
+  } from "$lib/internal/elements";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let name: string;

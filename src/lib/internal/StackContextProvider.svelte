@@ -9,6 +9,7 @@
 
 <script lang="ts">
   import { getContext, onDestroy, setContext } from "svelte";
+
   type OnUpdate = (message: StackMessage, element: HTMLElement) => void;
 
   export let onUpdate: OnUpdate | undefined;

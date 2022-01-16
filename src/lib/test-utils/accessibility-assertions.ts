@@ -1,6 +1,6 @@
 import { isFocusableElement, FocusableMode } from "../utils/focus-management";
 
-function assertNever(x: never): never {
+export function assertNever(x: never): never {
   throw new Error("Unexpected object: " + x);
 }
 
@@ -89,7 +89,7 @@ export function assertMenuButton(
     }
 
     // Ensure menu button has the following attributes
-    for (let attributeName in options.attributes) {
+    for (const attributeName in options.attributes) {
       expect(button).toHaveAttribute(
         attributeName,
         options.attributes[attributeName]
@@ -170,7 +170,7 @@ export function assertMenu(
         if (options.textContent)
           expect(menu).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(menu).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -189,7 +189,7 @@ export function assertMenu(
         if (options.textContent)
           expect(menu).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(menu).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -228,7 +228,7 @@ export function assertMenuItem(
 
     // Ensure menu button has the following attributes
     if (options) {
-      for (let attributeName in options.attributes) {
+      for (const attributeName in options.attributes) {
         expect(item).toHaveAttribute(
           attributeName,
           options.attributes[attributeName]
@@ -295,7 +295,7 @@ export function assertListbox(
   },
   listbox = getListbox()
 ) {
-  let { orientation = "vertical" } = options;
+  const { orientation = "vertical" } = options;
 
   try {
     switch (options.state) {
@@ -311,7 +311,7 @@ export function assertListbox(
         if (options.textContent)
           expect(listbox).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(listbox).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -331,7 +331,7 @@ export function assertListbox(
         if (options.textContent)
           expect(listbox).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(listbox).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -400,7 +400,7 @@ export function assertListboxButton(
     }
 
     // Ensure menu button has the following attributes
-    for (let attributeName in options.attributes) {
+    for (const attributeName in options.attributes) {
       expect(button).toHaveAttribute(
         attributeName,
         options.attributes[attributeName]
@@ -435,7 +435,7 @@ export function assertListboxLabel(
     }
 
     // Ensure menu button has the following attributes
-    for (let attributeName in options.attributes) {
+    for (const attributeName in options.attributes) {
       expect(label).toHaveAttribute(
         attributeName,
         options.attributes[attributeName]
@@ -537,7 +537,7 @@ export function assertNoActiveListboxOption(listbox = getListbox()) {
 
 export function assertNoSelectedListboxOption(items = getListboxOptions()) {
   try {
-    for (let item of items) expect(item).not.toHaveAttribute("aria-selected");
+    for (const item of items) expect(item).not.toHaveAttribute("aria-selected");
   } catch (err: any) {
     Error.captureStackTrace(err, assertNoSelectedListboxOption);
     throw err;
@@ -567,7 +567,7 @@ export function assertListboxOption(
     // Ensure listbox button has the following attributes
     if (!options) return;
 
-    for (let attributeName in options.attributes) {
+    for (const attributeName in options.attributes) {
       expect(item).toHaveAttribute(
         attributeName,
         options.attributes[attributeName]
@@ -735,7 +735,7 @@ export function assertDisclosureButton(
     }
 
     // Ensure disclosure button has the following attributes
-    for (let attributeName in options.attributes) {
+    for (const attributeName in options.attributes) {
       expect(button).toHaveAttribute(
         attributeName,
         options.attributes[attributeName]
@@ -765,7 +765,7 @@ export function assertDisclosurePanel(
         if (options.textContent)
           expect(panel).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(panel).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -781,7 +781,7 @@ export function assertDisclosurePanel(
         if (options.textContent)
           expect(panel).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(panel).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -878,7 +878,7 @@ export function assertPopoverButton(
     }
 
     // Ensure popover button has the following attributes
-    for (let attributeName in options.attributes) {
+    for (const attributeName in options.attributes) {
       expect(button).toHaveAttribute(
         attributeName,
         options.attributes[attributeName]
@@ -908,7 +908,7 @@ export function assertPopoverPanel(
         if (options.textContent)
           expect(panel).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(panel).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -924,7 +924,7 @@ export function assertPopoverPanel(
         if (options.textContent)
           expect(panel).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(panel).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -951,7 +951,7 @@ export function assertLabelValue(element: HTMLElement | null, value: string) {
   if (element === null) return expect(element).not.toBe(null);
 
   if (element.hasAttribute("aria-labelledby")) {
-    let ids = element.getAttribute("aria-labelledby")!.split(" ");
+    const ids = element.getAttribute("aria-labelledby")!.split(" ");
     expect(
       ids.map((id) => document.getElementById(id)?.textContent).join(" ")
     ).toEqual(value);
@@ -984,7 +984,7 @@ export function assertDescriptionValue(
 ) {
   if (element === null) return expect(element).not.toBe(null);
 
-  let id = element.getAttribute("aria-describedby")!;
+  const id = element.getAttribute("aria-describedby")!;
   expect(document.getElementById(id)?.textContent).toEqual(value);
 }
 
@@ -1052,7 +1052,7 @@ export function assertDialog(
         if (options.textContent)
           expect(dialog).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(dialog).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -1071,7 +1071,7 @@ export function assertDialog(
         if (options.textContent)
           expect(dialog).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(dialog).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -1115,7 +1115,7 @@ export function assertDialogTitle(
         if (options.textContent)
           expect(title).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(title).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -1135,7 +1135,7 @@ export function assertDialogTitle(
         if (options.textContent)
           expect(title).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(title).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -1179,7 +1179,7 @@ export function assertDialogDescription(
         if (options.textContent)
           expect(description).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(description).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -1199,7 +1199,7 @@ export function assertDialogDescription(
         if (options.textContent)
           expect(description).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(description).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -1238,7 +1238,7 @@ export function assertDialogOverlay(
         if (options.textContent)
           expect(overlay).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(overlay).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -1254,7 +1254,7 @@ export function assertDialogOverlay(
         if (options.textContent)
           expect(overlay).toHaveTextContent(options.textContent);
 
-        for (let attributeName in options.attributes) {
+        for (const attributeName in options.attributes) {
           expect(overlay).toHaveAttribute(
             attributeName,
             options.attributes[attributeName]
@@ -1311,7 +1311,7 @@ export function assertRadioGroupLabel(
     if (options.textContent)
       expect(label).toHaveTextContent(options.textContent);
 
-    for (let attributeName in options.attributes) {
+    for (const attributeName in options.attributes) {
       expect(label).toHaveAttribute(
         attributeName,
         options.attributes[attributeName]
@@ -1359,14 +1359,14 @@ export function assertTabs(
     expect(list).toHaveAttribute("role", "tablist");
     expect(list).toHaveAttribute("aria-orientation", orientation);
 
-    let activeTab = tabs.find(
+    const activeTab = tabs.find(
       (tab) => tab.dataset.headlessuiIndex === "" + active
     );
-    let activePanel = panels.find(
+    const activePanel = panels.find(
       (panel) => panel.dataset.headlessuiIndex === "" + active
     );
 
-    for (let tab of tabs) {
+    for (const tab of tabs) {
       expect(tab).toHaveAttribute("id");
       expect(tab).toHaveAttribute("role", "tab");
       expect(tab).toHaveAttribute("type", "button");
@@ -1380,8 +1380,8 @@ export function assertTabs(
       }
 
       if (tab.hasAttribute("aria-controls")) {
-        let controlsId = tab.getAttribute("aria-controls")!;
-        let panel = document.getElementById(controlsId);
+        const controlsId = tab.getAttribute("aria-controls")!;
+        const panel = document.getElementById(controlsId);
 
         expect(panel).not.toBe(null);
         expect(panels).toContain(panel);
@@ -1389,12 +1389,12 @@ export function assertTabs(
       }
     }
 
-    for (let panel of panels) {
+    for (const panel of panels) {
       expect(panel).toHaveAttribute("id");
       expect(panel).toHaveAttribute("role", "tabpanel");
 
-      let controlledById = panel.getAttribute("aria-labelledby")!;
-      let tab = document.getElementById(controlledById);
+      const controlledById = panel.getAttribute("aria-labelledby")!;
+      const tab = document.getElementById(controlledById);
 
       expect(tabs).toContain(tab);
       expect(tab).toHaveAttribute("aria-controls", panel.id);
@@ -1494,7 +1494,7 @@ export function assertNotFocusable(element: HTMLElement | null) {
 // ---
 
 export function getByText(text: string): HTMLElement | null {
-  let walker = document.createTreeWalker(
+  const walker = document.createTreeWalker(
     document.body,
     NodeFilter.SHOW_ELEMENT,
     {
