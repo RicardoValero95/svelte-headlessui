@@ -1,13 +1,15 @@
 <script lang="ts">
   import { onMount, setContext } from "svelte";
-  import { writable, Writable } from "svelte/store";
-  import { match } from "$lib/utils/match";
-  import { State, useOpenClosed } from "$lib/internal/open-closed";
-  import TransitionChild from "$lib/components/transitions/TransitionChild.svelte";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
+  import { writable, Writable } from "svelte/store";
+
+  import TransitionChild from "$lib/components/transitions/TransitionChild.svelte";
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { State, useOpenClosed } from "$lib/internal/open-closed";
+  import { match } from "$lib/utils/match";
+
   import {
     hasChildren,
     NestingContextValues,
@@ -17,6 +19,7 @@
     TreeStates,
     useNesting,
   } from "./common.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     "beforeEnter",
     "beforeLeave",

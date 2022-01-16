@@ -1,7 +1,10 @@
 <script lang="ts">
-  import { useId } from "$lib/hooks/use-id";
   import { onMount } from "svelte";
+
+  import { useId } from "$lib/hooks/use-id";
+
   import { useLabelContext } from "./LabelProvider.svelte";
+
   const id = `headlessui-label-${useId()}`;
   export let passive = false;
   let contextStore = useLabelContext();

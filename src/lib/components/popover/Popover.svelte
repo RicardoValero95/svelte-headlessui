@@ -42,21 +42,24 @@
 </script>
 
 <script lang="ts">
-  import { match } from "$lib/utils/match";
+  import { getContext, setContext, onMount } from "svelte";
+  import { get_current_component } from "svelte/internal";
+  import { Readable, writable, Writable } from "svelte/store";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import { useId } from "$lib/hooks/use-id";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { State, useOpenClosedProvider } from "$lib/internal/open-closed";
   import {
     isFocusableElement,
     FocusableMode,
   } from "$lib/utils/focus-management";
-  import { State, useOpenClosedProvider } from "$lib/internal/open-closed";
-  import { usePopoverGroupContext } from "./PopoverGroup.svelte";
-  import { getContext, setContext, onMount } from "svelte";
-  import { Readable, writable, Writable } from "svelte/store";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
-  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { match } from "$lib/utils/match";
   import Render from "$lib/utils/Render.svelte";
+
+  import { usePopoverGroupContext } from "./PopoverGroup.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "div";

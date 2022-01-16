@@ -1,11 +1,4 @@
 <script lang="ts" context="module">
-  import DescriptionProvider from "$lib/components/description/DescriptionProvider.svelte";
-  import LabelProvider from "$lib/components/label/LabelProvider.svelte";
-  import { createEventDispatcher, getContext, setContext } from "svelte";
-  import { Readable, Writable, writable } from "svelte/store";
-  import { Focus, focusIn, FocusResult } from "$lib/utils/focus-management";
-  import { Keys } from "$lib/utils/keyboard";
-  import { useId } from "$lib/hooks/use-id";
   export interface Option {
     id: string;
     element: HTMLElement | null;
@@ -45,12 +38,21 @@
 </script>
 
 <script lang="ts">
-  import { treeWalker } from "$lib/hooks/use-tree-walker";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { createEventDispatcher, getContext, setContext } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
+  import { Readable, Writable, writable } from "svelte/store";
+
+  import DescriptionProvider from "$lib/components/description/DescriptionProvider.svelte";
+  import LabelProvider from "$lib/components/label/LabelProvider.svelte";
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { useId } from "$lib/hooks/use-id";
+  import { treeWalker } from "$lib/hooks/use-tree-walker";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { Focus, focusIn, FocusResult } from "$lib/utils/focus-management";
+  import { Keys } from "$lib/utils/keyboard";
   import Render from "$lib/utils/Render.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     "change",
   ]);

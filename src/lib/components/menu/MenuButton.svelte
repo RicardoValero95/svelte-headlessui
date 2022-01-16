@@ -1,15 +1,18 @@
 <script lang="ts">
-  import { useMenuContext, MenuStates } from "./Menu.svelte";
-  import { useId } from "$lib/hooks/use-id";
-  import { Keys } from "$lib/utils/keyboard";
-  import { Focus } from "$lib/utils/calculate-active-index";
   import { tick } from "svelte";
+  import { get_current_component } from "svelte/internal";
+
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
-  import Render from "$lib/utils/Render.svelte";
+  import { useId } from "$lib/hooks/use-id";
   import type { SupportedAs } from "$lib/internal/elements";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
+  import { Focus } from "$lib/utils/calculate-active-index";
+  import { Keys } from "$lib/utils/keyboard";
+  import Render from "$lib/utils/Render.svelte";
   import { resolveButtonType } from "$lib/utils/resolve-button-type";
+
+  import { useMenuContext, MenuStates } from "./Menu.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
   export let as: SupportedAs = "button";
   export let use: HTMLActionArray = [];

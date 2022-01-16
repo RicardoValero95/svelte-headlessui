@@ -1,12 +1,15 @@
 <script lang="ts">
-  import { State, useOpenClosed } from "$lib/internal/open-closed";
-  import { PopoverStates, usePopoverContext } from "./Popover.svelte";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
+
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
-  import Render, { Features } from "$lib/utils/Render.svelte";
   import { useId } from "$lib/hooks/use-id";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { State, useOpenClosed } from "$lib/internal/open-closed";
+  import Render, { Features } from "$lib/utils/Render.svelte";
+
+  import { PopoverStates, usePopoverContext } from "./Popover.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "div";

@@ -1,26 +1,29 @@
 <script lang="ts">
-  import { Keys } from "$lib/utils/keyboard";
+  import { get_current_component } from "svelte/internal";
+  import { writable } from "svelte/store";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import {
     getFocusableElements,
     Focus,
     focusIn,
   } from "$lib/utils/focus-management";
-  import { writable } from "svelte/store";
+  import { Keys } from "$lib/utils/keyboard";
+  import Render from "$lib/utils/Render.svelte";
+  import { resolveButtonType } from "$lib/utils/resolve-button-type";
+
   import { PopoverStates, usePopoverContext } from "./Popover.svelte";
   import { usePopoverGroupContext } from "./PopoverGroup.svelte";
   import { usePopoverPanelContext } from "./PopoverPanel.svelte";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
-  import type { HTMLActionArray } from "$lib/hooks/use-actions";
-  import Render from "$lib/utils/Render.svelte";
-  import { resolveButtonType } from "$lib/utils/resolve-button-type";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "button";
   export let use: HTMLActionArray = [];
 
-  export let disabled: Boolean = false;
+  export let disabled = false;
   let api = usePopoverContext("PopoverButton");
 
   let apiButton = $api.button;
@@ -131,7 +134,7 @@
 
     // TODO: Revisit when handling Tab/Shift+Tab when using Portal's
     switch (event.key) {
-      case Keys.Tab:
+      case Keys.Tab: {
         // Check if the last focused element exists, and check that it is not inside button or panel itself
         if (!previousActiveElementRef) return;
         if ($apiButton?.contains(previousActiveElementRef)) return;
@@ -149,6 +152,7 @@
         event.stopPropagation();
         focusIn($apiPanel, Focus.Last);
         break;
+      }
     }
   }
   function handleClick() {

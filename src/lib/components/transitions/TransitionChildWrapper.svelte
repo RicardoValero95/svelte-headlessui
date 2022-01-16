@@ -1,12 +1,15 @@
 <script lang="ts">
+  import { get_current_component } from "svelte/internal";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { hasOpenClosed } from "$lib/internal/open-closed";
+
+  import { hasTransitionContext } from "./common.svelte";
   import TransitionChild from "./TransitionChild.svelte";
   import TransitionRoot from "./TransitionRoot.svelte";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
-  import type { HTMLActionArray } from "$lib/hooks/use-actions";
-  import { hasTransitionContext } from "./common.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     "beforeEnter",
     "beforeLeave",

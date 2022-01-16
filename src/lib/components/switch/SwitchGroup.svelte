@@ -10,15 +10,17 @@
 </script>
 
 <script lang="ts">
+  import { getContext, setContext } from "svelte";
+  import { get_current_component } from "svelte/internal";
+  import { Writable, writable } from "svelte/store";
+
   import DescriptionProvider from "$lib/components/description/DescriptionProvider.svelte";
   import LabelProvider from "$lib/components/label/LabelProvider.svelte";
-  import { getContext, setContext } from "svelte";
-  import { Writable, writable } from "svelte/store";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import Render from "$lib/utils/Render.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
   export let as: SupportedAs = "div";
   export let use: HTMLActionArray = [];

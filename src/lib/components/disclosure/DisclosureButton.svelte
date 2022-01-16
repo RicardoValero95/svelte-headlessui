@@ -1,14 +1,17 @@
 <script lang="ts">
+  import { get_current_component } from "svelte/internal";
+  import { Writable, writable } from "svelte/store";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { Keys } from "$lib/utils/keyboard";
+  import Render from "$lib/utils/Render.svelte";
+  import { resolveButtonType } from "$lib/utils/resolve-button-type";
+
   import { useDisclosureContext, DisclosureStates } from "./Disclosure.svelte";
   import { usePanelContext } from "./DisclosurePanel.svelte";
-  import { Keys } from "$lib/utils/keyboard";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
-  import type { HTMLActionArray } from "$lib/hooks/use-actions";
-  import Render from "$lib/utils/Render.svelte";
-  import { Writable, writable } from "svelte/store";
-  import { resolveButtonType } from "$lib/utils/resolve-button-type";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "button";

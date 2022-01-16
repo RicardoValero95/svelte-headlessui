@@ -1,6 +1,4 @@
 <script lang="ts" context="module">
-  import { Readable, writable, Writable } from "svelte/store";
-  import { getContext, setContext } from "svelte";
   export enum DisclosureStates {
     Open,
     Closed,
@@ -42,14 +40,18 @@
 </script>
 
 <script lang="ts">
-  import { useId } from "$lib/hooks/use-id";
-  import { match } from "$lib/utils/match";
-  import { State, useOpenClosedProvider } from "$lib/internal/open-closed";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { getContext, setContext } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
+  import { Readable, writable, Writable } from "svelte/store";
+
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { useId } from "$lib/hooks/use-id";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { State, useOpenClosedProvider } from "$lib/internal/open-closed";
+  import { match } from "$lib/utils/match";
   import Render from "$lib/utils/Render.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "div";

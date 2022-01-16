@@ -1,16 +1,19 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { get_current_component } from "svelte/internal";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { useId } from "$lib/hooks/use-id";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { Focus, focusIn } from "$lib/utils/focus-management";
   import { Keys } from "$lib/utils/keyboard";
   import { match } from "$lib/utils/match";
-  import { useTabsContext } from "./TabGroup.svelte";
-  import { useId } from "$lib/hooks/use-id";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
-  import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import Render from "$lib/utils/Render.svelte";
   import { resolveButtonType } from "$lib/utils/resolve-button-type";
+
+  import { useTabsContext } from "./TabGroup.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "button";

@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { ListboxStates, useListboxContext } from "./Listbox.svelte";
-  import { useId } from "$lib/hooks/use-id";
-  import Render from "$lib/utils/Render.svelte";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import type { SupportedAs } from "$lib/internal/elements";
-  import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import { get_current_component } from "svelte/internal";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { useId } from "$lib/hooks/use-id";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import Render from "$lib/utils/Render.svelte";
+
+  import { ListboxStates, useListboxContext } from "./Listbox.svelte";
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
   export let as: SupportedAs = "label";

@@ -1,16 +1,17 @@
 <script lang="ts" context="module">
+  import { getContext, setContext } from "svelte";
+  import { get_current_component } from "svelte/internal";
+  import { Readable, writable, Writable } from "svelte/store";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { State, useOpenClosedProvider } from "$lib/internal/open-closed";
   import {
     Focus,
     calculateActiveIndex,
   } from "$lib/utils/calculate-active-index";
-  import { getContext, setContext } from "svelte";
-  import { Readable, writable, Writable } from "svelte/store";
-  import { State, useOpenClosedProvider } from "$lib/internal/open-closed";
   import { match } from "$lib/utils/match";
-  import type { HTMLActionArray } from "$lib/hooks/use-actions";
-  import type { SupportedAs } from "$lib/internal/elements";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
   import Render from "$lib/utils/Render.svelte";
 
   export enum MenuStates {

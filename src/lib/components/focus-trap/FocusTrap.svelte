@@ -1,16 +1,17 @@
 <script lang="ts">
-  import { Keys } from "$lib/utils/keyboard";
+  import { onMount, onDestroy, tick } from "svelte";
+
+  import { contains } from "$lib/internal/dom-containers";
   import {
     focusElement,
     focusIn,
     Focus,
     FocusResult,
   } from "$lib/utils/focus-management";
-  import { contains } from "$lib/internal/dom-containers";
-  import { onMount, onDestroy, tick } from "svelte";
+  import { Keys } from "$lib/utils/keyboard";
 
   export let containers: Set<HTMLElement>;
-  export let enabled: boolean = true;
+  export let enabled = true;
   export let options: { initialFocus?: HTMLElement | null } = {};
 
   let restoreElement: HTMLElement | null =

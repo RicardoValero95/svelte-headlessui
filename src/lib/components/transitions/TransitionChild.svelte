@@ -1,9 +1,8 @@
 <script lang="ts">
   import { createEventDispatcher, onMount, setContext } from "svelte";
+  import { get_current_component } from "svelte/internal";
   import { writable, Writable } from "svelte/store";
-  import { match } from "$lib/utils/match";
-  import { State, useOpenClosedProvider } from "$lib/internal/open-closed";
-  import { Reason, transition } from "$lib/utils/transition";
+
   import {
     hasChildren,
     NestingContextValues,
@@ -13,12 +12,15 @@
     useParentNesting,
     useTransitionContext,
   } from "$lib/components/transitions/common.svelte";
-  import { useId } from "$lib/hooks/use-id";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { useId } from "$lib/hooks/use-id";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { State, useOpenClosedProvider } from "$lib/internal/open-closed";
+  import { match } from "$lib/utils/match";
   import Render, { Features, RenderStrategy } from "$lib/utils/Render.svelte";
+  import { Reason, transition } from "$lib/utils/transition";
+
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     "beforeEnter",
     "beforeLeave",
@@ -87,7 +89,7 @@
     })();
   }
 
-  function splitClasses(classes: string = "") {
+  function splitClasses(classes = "") {
     return classes
       .split(" ")
       .filter((className) => className.trim().length > 1);

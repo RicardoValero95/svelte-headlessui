@@ -1,12 +1,4 @@
 <script lang="ts" context="module">
-  import {
-    getContext,
-    setContext,
-    createEventDispatcher,
-    tick,
-    onDestroy,
-    onMount,
-  } from "svelte";
   export enum DialogStates {
     Open,
     Closed,
@@ -40,33 +32,43 @@
 </script>
 
 <script lang="ts">
-  import { State, useOpenClosed } from "$lib/internal/open-closed";
+  import {
+    getContext,
+    setContext,
+    createEventDispatcher,
+    tick,
+    onDestroy,
+    onMount,
+  } from "svelte";
+  import { get_current_component } from "svelte/internal";
   import { Readable, writable, Writable } from "svelte/store";
-  import { match } from "$lib/utils/match";
+
+  import DescriptionProvider from "$lib/components/description/DescriptionProvider.svelte";
+  import FocusTrap from "$lib/components/focus-trap/FocusTrap.svelte";
+  import Portal from "$lib/components/portal/Portal.svelte";
+  import PortalGroup from "$lib/components/portal/PortalGroup.svelte";
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import { useId } from "$lib/hooks/use-id";
   import { useInertOthers } from "$lib/hooks/use-inert-others";
   import { contains } from "$lib/internal/dom-containers";
-  import { Keys } from "$lib/utils/keyboard";
-  import FocusTrap from "$lib/components/focus-trap/FocusTrap.svelte";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import ForcePortalRootContext from "$lib/internal/ForcePortalRootContext.svelte";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { State, useOpenClosed } from "$lib/internal/open-closed";
   import StackContextProvider, {
     StackMessage,
   } from "$lib/internal/StackContextProvider.svelte";
-  import DescriptionProvider from "$lib/components/description/DescriptionProvider.svelte";
-  import ForcePortalRootContext from "$lib/internal/ForcePortalRootContext.svelte";
-  import Portal from "$lib/components/portal/Portal.svelte";
-  import PortalGroup from "$lib/components/portal/PortalGroup.svelte";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
-  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { Keys } from "$lib/utils/keyboard";
+  import { match } from "$lib/utils/match";
   import Render, { Features } from "$lib/utils/Render.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     "close",
   ]);
   export let as: SupportedAs = "div";
   export let use: HTMLActionArray = [];
 
-  export let open: Boolean | undefined = undefined;
+  export let open: boolean | undefined = undefined;
   export let initialFocus: HTMLElement | null = null;
 
   const dispatch = createEventDispatcher();

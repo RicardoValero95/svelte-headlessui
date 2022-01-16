@@ -1,5 +1,4 @@
 <script lang="ts" context="module">
-  import { getContext, setContext } from "svelte";
   let DISCLOSURE_PANEL_CONTEXT_NAME = "headlessui-disclosure-panel-context";
 
   export function usePanelContext(): string | undefined {
@@ -8,13 +7,17 @@
 </script>
 
 <script lang="ts">
-  import { useDisclosureContext, DisclosureStates } from "./Disclosure.svelte";
-  import { State, useOpenClosed } from "$lib/internal/open-closed";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { getContext, setContext } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
+
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { State, useOpenClosed } from "$lib/internal/open-closed";
   import Render, { Features } from "$lib/utils/Render.svelte";
+
+  import { useDisclosureContext, DisclosureStates } from "./Disclosure.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "div";

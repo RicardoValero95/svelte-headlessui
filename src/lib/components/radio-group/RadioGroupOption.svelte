@@ -1,14 +1,17 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
+  import { get_current_component } from "svelte/internal";
+
   import DescriptionProvider from "$lib/components/description/DescriptionProvider.svelte";
   import LabelProvider from "$lib/components/label/LabelProvider.svelte";
-  import { useRadioGroupContext, Option } from "./RadioGroup.svelte";
-  import { useId } from "$lib/hooks/use-id";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { useId } from "$lib/hooks/use-id";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import Render from "$lib/utils/Render.svelte";
+
+  import { useRadioGroupContext, Option } from "./RadioGroup.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "div";
@@ -20,7 +23,7 @@
   }
 
   export let value: unknown;
-  export let disabled: boolean = false;
+  export let disabled = false;
   let api = useRadioGroupContext("RadioGroupOption");
   let id = `headlessui-radiogroup-option-${useId()}`;
   let optionRef: HTMLElement | null = null;

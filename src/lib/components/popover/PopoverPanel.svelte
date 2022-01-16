@@ -10,7 +10,12 @@
 </script>
 
 <script lang="ts">
-  import { Keys } from "$lib/utils/keyboard";
+  import { getContext, setContext } from "svelte";
+  import { get_current_component } from "svelte/internal";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { State, useOpenClosed } from "$lib/internal/open-closed";
   import {
     getFocusableElements,
@@ -18,17 +23,15 @@
     FocusResult,
     focusIn,
   } from "$lib/utils/focus-management";
-  import { getContext, setContext } from "svelte";
+  import { Keys } from "$lib/utils/keyboard";
+  import Render, { Features } from "$lib/utils/Render.svelte";
+
   import {
     PopoverStates,
     StateDefinition,
     usePopoverContext,
   } from "./Popover.svelte";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
-  import type { HTMLActionArray } from "$lib/hooks/use-actions";
-  import Render, { Features } from "$lib/utils/Render.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "div";

@@ -1,13 +1,15 @@
 <script lang="ts">
   import { onDestroy, onMount, tick } from "svelte";
-  import { ListboxStates, useListboxContext } from "./Listbox.svelte";
+  import { get_current_component } from "svelte/internal";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import { useId } from "$lib/hooks/use-id";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { Focus } from "$lib/utils/calculate-active-index";
   import Render from "$lib/utils/Render.svelte";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import type { SupportedAs } from "$lib/internal/elements";
-  import { get_current_component } from "svelte/internal";
-  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+
+  import { ListboxStates, useListboxContext } from "./Listbox.svelte";
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
   export let as: SupportedAs = "li";

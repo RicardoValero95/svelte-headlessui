@@ -1,9 +1,10 @@
 <script lang="ts" context="module">
+  import { getContext } from "svelte";
+  import type { Readable, Writable } from "svelte/store";
+
   import type { useId } from "$lib/hooks/use-id";
   import { match } from "$lib/utils/match";
   import { RenderStrategy } from "$lib/utils/Render.svelte";
-  import { getContext } from "svelte";
-  import type { Readable, Writable } from "svelte/store";
 
   export enum TreeStates {
     Visible = "visible",

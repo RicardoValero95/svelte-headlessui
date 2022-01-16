@@ -1,12 +1,15 @@
 <script lang="ts">
-  import { DialogStates, useDialogContext } from "./Dialog.svelte";
-  import { useId } from "$lib/hooks/use-id";
   import { onMount } from "svelte";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
+
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { useId } from "$lib/hooks/use-id";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import Render from "$lib/utils/Render.svelte";
+
+  import { DialogStates, useDialogContext } from "./Dialog.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
   export let as: SupportedAs = "h2";
   export let use: HTMLActionArray = [];

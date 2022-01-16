@@ -1,6 +1,9 @@
 import { render } from "@testing-library/svelte";
-import TestRenderer from "../../test-utils/TestRenderer.svelte";
-import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from ".";
+import svelte from "svelte-inline-compile";
+
+import Button from "$lib/internal/elements/Button.svelte";
+import Div from "$lib/internal/elements/Div.svelte";
+import Span from "$lib/internal/elements/Span.svelte";
 import {
   assertActiveElement,
   assertSwitch,
@@ -8,12 +11,14 @@ import {
   getSwitchLabel,
   SwitchState,
 } from "$lib/test-utils/accessibility-assertions";
-import Button from "$lib/internal/elements/Button.svelte";
-import Div from "$lib/internal/elements/Div.svelte";
-import Span from "$lib/internal/elements/Span.svelte";
-import ManagedSwitch from "./_ManagedSwitch.svelte";
 import { click, Keys, press } from "$lib/test-utils/interactions";
-import svelte from "svelte-inline-compile";
+
+import TestRenderer from "../../test-utils/TestRenderer.svelte";
+
+import ManagedSwitch from "./_ManagedSwitch.svelte";
+
+import { Switch, SwitchDescription, SwitchGroup, SwitchLabel } from ".";
+
 jest.mock("../../hooks/use-id");
 
 describe("Safe guards", () => {
@@ -25,25 +30,25 @@ describe("Safe guards", () => {
 });
 
 describe("Rendering", () => {
-  it('(on) Switch should have a slot prop', () => {
+  it("(on) Switch should have a slot prop", () => {
     render(svelte`
       <Switch checked={true} on:change={console.log} let:checked>
         <span>{checked ? 'On' : 'Off'}</span>
       </Switch>
-    `)
+    `);
 
-    assertSwitch({ state: SwitchState.On, textContent: 'On' })
-  })
+    assertSwitch({ state: SwitchState.On, textContent: "On" });
+  });
 
-  it('(off) Switch should have a slot prop', () => {
+  it("(off) Switch should have a slot prop", () => {
     render(svelte`
       <Switch checked={false} on:change={console.log} let:checked>
         <span>{checked ? 'On' : 'Off'}</span>
       </Switch>
-    `)
+    `);
 
-    assertSwitch({ state: SwitchState.Off, textContent: 'Off' })
-  })
+    assertSwitch({ state: SwitchState.Off, textContent: "Off" });
+  });
 
   it("should be possible to render an (on) Switch using an `as` prop", () => {
     render(TestRenderer, {
@@ -249,7 +254,7 @@ describe("Keyboard interactions", () => {
 
   describe("`Enter` key", () => {
     it("should not be possible to use Enter to toggle the Switch", async () => {
-      let handleChange = jest.fn();
+      const handleChange = jest.fn();
       render(TestRenderer, {
         allProps: [ManagedSwitch, { onChange: handleChange }],
       });

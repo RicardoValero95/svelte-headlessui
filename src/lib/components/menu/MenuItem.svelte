@@ -1,13 +1,16 @@
 <script lang="ts">
-  import { useMenuContext, MenuStates, MenuItemData } from "./Menu.svelte";
-  import { useId } from "$lib/hooks/use-id";
-  import { Focus } from "$lib/utils/calculate-active-index";
   import { afterUpdate, onDestroy, onMount, tick } from "svelte";
-  import Render from "$lib/utils/Render.svelte";
+  import { get_current_component } from "svelte/internal";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { useId } from "$lib/hooks/use-id";
   import type { SupportedAs } from "$lib/internal/elements";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { get_current_component } from "svelte/internal";
-  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { Focus } from "$lib/utils/calculate-active-index";
+  import Render from "$lib/utils/Render.svelte";
+
+  import { useMenuContext, MenuStates, MenuItemData } from "./Menu.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     { name: "click", shouldExclude: () => disabled },
   ]);

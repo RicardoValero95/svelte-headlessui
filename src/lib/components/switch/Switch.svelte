@@ -1,16 +1,19 @@
 <script lang="ts">
-  import { useSwitchContext } from "./SwitchGroup.svelte";
-  import { useLabelContext } from "$lib/components/label/LabelProvider.svelte";
-  import { useDescriptionContext } from "$lib/components/description/DescriptionProvider.svelte";
-  import { useId } from "$lib/hooks/use-id";
-  import { Keys } from "$lib/utils/keyboard";
   import { createEventDispatcher } from "svelte";
-  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { get_current_component } from "svelte/internal";
-  import type { SupportedAs } from "$lib/internal/elements";
+
+  import { useDescriptionContext } from "$lib/components/description/DescriptionProvider.svelte";
+  import { useLabelContext } from "$lib/components/label/LabelProvider.svelte";
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { useId } from "$lib/hooks/use-id";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { Keys } from "$lib/utils/keyboard";
   import Render from "$lib/utils/Render.svelte";
   import { resolveButtonType } from "$lib/utils/resolve-button-type";
+
+  import { useSwitchContext } from "./SwitchGroup.svelte";
+
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     "change",
   ]);
