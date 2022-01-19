@@ -1,0 +1,155 @@
+<script lang="ts">
+  import { tick } from "svelte";
+  import { get_current_component } from "svelte/internal";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { useId } from "$lib/hooks/use-id";
+  import { treeWalker } from "$lib/hooks/use-tree-walker";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { State, useOpenClosed } from "$lib/internal/open-closed";
+  import { Focus } from "$lib/utils/calculate-active-index";
+  import { Keys } from "$lib/utils/keyboard";
+  import Render, { Features } from "$lib/utils/Render.svelte";
+
+  import { useDropdownContext, States } from "./dropdown";
+
+  const forwardEvents = forwardEventsBuilder(get_current_component());
+  export let as: SupportedAs = "div";
+  export let use: HTMLActionArray = [];
+  const api = useDropdownContext("Items");
+  const id = `headlessui-dropdown-items-${useId()}`;
+  let searchDebounce: ReturnType<typeof setTimeout> | null = null;
+
+  $: buttonStore = $api.buttonStore;
+  $: itemsStore = $api.itemsStore;
+
+  let openClosedState = useOpenClosed();
+
+  $: visible =
+    openClosedState !== undefined
+      ? $openClosedState === State.Open
+      : $api.state === States.Open;
+
+  $: treeWalker({
+    container: $itemsStore,
+    enabled: $api.state === States.Open,
+    accept(node) {
+      if (node.getAttribute("role") === "item") return NodeFilter.FILTER_REJECT;
+      if (node.hasAttribute("role")) return NodeFilter.FILTER_SKIP;
+      return NodeFilter.FILTER_ACCEPT;
+    },
+    walk(node) {
+      node.setAttribute("role", "none");
+    },
+  });
+
+  async function handleKeyDown(e: CustomEvent) {
+    if (searchDebounce) clearTimeout(searchDebounce);
+    let event = e as any as KeyboardEvent;
+
+    switch (event.key) {
+      // Ref: https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-12
+
+      case Keys.Space:
+        if ($api.searchQuery !== "") {
+          event.preventDefault();
+          event.stopPropagation();
+          return $api.search(event.key);
+        }
+      // When in type ahead mode, fallthrough
+      case Keys.Enter:
+        event.preventDefault();
+        event.stopPropagation();
+        if ($api.activeItemIndex !== null) {
+          let { id } = $api.items[$api.activeItemIndex];
+          document.getElementById(id)?.click();
+        }
+        $api.close();
+        await tick();
+        $buttonStore?.focus({ preventScroll: true });
+        break;
+
+      case Keys.ArrowDown:
+        event.preventDefault();
+        event.stopPropagation();
+        return $api.goToItem(Focus.Next);
+
+      case Keys.ArrowUp:
+        event.preventDefault();
+        event.stopPropagation();
+        return $api.goToItem(Focus.Previous);
+
+      case Keys.Home:
+      case Keys.PageUp:
+        event.preventDefault();
+        event.stopPropagation();
+        return $api.goToItem(Focus.First);
+
+      case Keys.End:
+      case Keys.PageDown:
+        event.preventDefault();
+        event.stopPropagation();
+        return $api.goToItem(Focus.Last);
+
+      case Keys.Escape:
+        event.preventDefault();
+        event.stopPropagation();
+        $api.close();
+        await tick();
+        $buttonStore?.focus({ preventScroll: true });
+        break;
+
+      case Keys.Tab:
+        event.preventDefault();
+        event.stopPropagation();
+        break;
+
+      default:
+        if (event.key.length === 1) {
+          $api.search(event.key);
+          searchDebounce = setTimeout(() => $api.clearSearch(), 350);
+        }
+        break;
+    }
+  }
+
+  function handleKeyUp(e: CustomEvent) {
+    let event = e as any as KeyboardEvent;
+    switch (event.key) {
+      case Keys.Space:
+        // Required for firefox, event.preventDefault() in handleKeyDown for
+        // the Space key doesn't cancel the handleKeyUp, which in turn
+        // triggers a *click*.
+        event.preventDefault();
+        break;
+    }
+  }
+
+  $: propsWeControl = {
+    "aria-activedescendant":
+      $api.activeItemIndex === null
+        ? undefined
+        : $api.items[$api.activeItemIndex]?.id,
+    "aria-labelledby": $buttonStore?.id,
+    id,
+    role: "dropdown",
+    tabIndex: 0,
+  };
+  $: slotProps = { open: $api.state === States.Open };
+</script>
+
+<Render
+  {...{ ...$$restProps, ...propsWeControl }}
+  {as}
+  {slotProps}
+  use={[...use, forwardEvents]}
+  bind:el={$itemsStore}
+  name={"Items"}
+  on:keydown={handleKeyDown}
+  on:keyup={handleKeyUp}
+  {visible}
+  features={Features.RenderStrategy | Features.Static}
+>
+  <slot {...slotProps} />
+</Render>

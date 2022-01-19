@@ -137,6 +137,7 @@ export async function type(
         const checks = action.name.split("And");
         if (checks.some((check) => skip.has(check))) continue;
 
+        // @ts-expect-error TODO: unique symbol vs symbol?
         const result: boolean | typeof Ignore | Element = await action(
           element,
           {

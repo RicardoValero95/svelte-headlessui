@@ -1,0 +1,102 @@
+<script lang="ts">
+  import { afterUpdate, onDestroy, onMount, tick } from "svelte";
+  import { get_current_component } from "svelte/internal";
+
+  import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { useId } from "$lib/hooks/use-id";
+  import type { SupportedAs } from "$lib/internal/elements";
+  import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
+  import { Focus } from "$lib/utils/calculate-active-index";
+  import Render from "$lib/utils/Render.svelte";
+
+  import { useDropdownContext, States, ItemData } from "./dropdown";
+
+  const forwardEvents = forwardEventsBuilder(get_current_component(), [
+    { name: "click", shouldExclude: () => disabled },
+  ]);
+  export let as: SupportedAs = "a";
+  export let use: HTMLActionArray = [];
+  export let disabled = false;
+  const api = useDropdownContext("Item");
+  const id = `headlessui-dropdown-item-${useId()}`;
+
+  $: active =
+    $api.activeItemIndex !== null
+      ? $api.items[$api.activeItemIndex].id === id
+      : false;
+
+  $: buttonStore = $api.buttonStore;
+
+  let elementRef: HTMLElement | undefined;
+  $: textValue = elementRef?.textContent?.toLowerCase().trim() || "";
+  // Fairly hacky (Svelte): only mutate the contents of the data object.
+  // On first registration, `data` will not contain the correct textValue,
+  // so it must be mutated afterwards
+  let data = { disabled, textValue } as ItemData;
+  $: data.disabled = disabled;
+  $: data.textValue = textValue;
+
+  onMount(async () => {
+    $api.registerItem(id, data);
+  });
+
+  onDestroy(() => {
+    $api.unregisterItem(id);
+  });
+
+  afterUpdate(async () => {
+    if ($api.state !== States.Open) return;
+    if (!active) return;
+    await tick();
+    elementRef?.scrollIntoView?.({ block: "nearest" });
+  });
+
+  async function handleClick(event: CustomEvent) {
+    if (disabled) return event.preventDefault();
+    $api.close();
+    $buttonStore?.focus({ preventScroll: true });
+  }
+
+  function handleFocus() {
+    if (disabled) return $api.goToItem(Focus.Nothing);
+    $api.goToItem(Focus.Specific, id);
+  }
+
+  function handleMove() {
+    if (disabled) return;
+    if (active) return;
+    $api.goToItem(Focus.Specific, id);
+  }
+
+  function handleLeave() {
+    if (disabled) return;
+    if (!active) return;
+    $api.goToItem(Focus.Nothing);
+  }
+
+  $: propsWeControl = {
+    id,
+    role: "dropdown-item",
+    tabIndex: disabled === true ? undefined : -1,
+    "aria-disabled": disabled === true ? true : undefined,
+  };
+
+  $: slotProps = { active, disabled };
+</script>
+
+<Render
+  {...{ ...$$restProps, ...propsWeControl }}
+  use={[...use, forwardEvents]}
+  {as}
+  {slotProps}
+  name={"Item"}
+  bind:el={elementRef}
+  on:click={handleClick}
+  on:focus={handleFocus}
+  on:pointermove={handleMove}
+  on:mousemove={handleMove}
+  on:pointerleave={handleLeave}
+  on:mouseleave={handleLeave}
+>
+  <slot {...slotProps} />
+</Render>
