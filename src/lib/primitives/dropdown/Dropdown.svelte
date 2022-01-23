@@ -1,6 +1,7 @@
 <script lang="ts">
   import { get_current_component } from "svelte/internal";
-  import { writable, Writable } from "svelte/store";
+  import type { Writable } from "svelte/store";
+  import { writable } from "svelte/store";
 
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import type { SupportedAs } from "$lib/internal/elements";
@@ -13,10 +14,11 @@
   import { match } from "$lib/utils/match";
   import Render from "$lib/utils/Render.svelte";
 
-  import {
+  import type {
     ItemData,
+    StateDefinition} from "./dropdown";
+  import {
     States,
-    StateDefinition,
     useDropdownProvider,
   } from "./dropdown";
 

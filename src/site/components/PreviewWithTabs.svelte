@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "$lib";
+  
   import CodeTab from "./CodeTab.svelte";
   import RenderTab from "./RenderTab.svelte";
-
-  import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "$lib";
+  
   import { classNames } from "$site/helpers";
 
   export let code: string;

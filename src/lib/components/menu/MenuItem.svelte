@@ -9,7 +9,8 @@
   import { Focus } from "$lib/utils/calculate-active-index";
   import Render from "$lib/utils/Render.svelte";
 
-  import { useMenuContext, MenuStates, MenuItemData } from "./Menu.svelte";
+  import type { MenuItemData } from "./Menu.svelte";
+  import { useMenuContext, MenuStates } from "./Menu.svelte";
 
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     { name: "click", shouldExclude: () => disabled },

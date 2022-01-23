@@ -9,7 +9,8 @@
   import { Focus } from "$lib/utils/calculate-active-index";
   import Render from "$lib/utils/Render.svelte";
 
-  import { useDropdownContext, States, ItemData } from "./dropdown";
+  import type { ItemData } from "./dropdown";
+  import { useDropdownContext, States } from "./dropdown";
 
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     { name: "click", shouldExclude: () => disabled },

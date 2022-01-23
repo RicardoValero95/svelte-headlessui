@@ -1,7 +1,8 @@
 // TODO: How to reuse the context stores?
 
 import { getContext, setContext } from "svelte";
-import { writable, Writable } from "svelte/store";
+import type { Writable } from "svelte/store";
+import { writable } from "svelte/store";
 
 const CONTEXT_NAME = "context";
 export function useContext<T>(): Writable<T> | undefined {

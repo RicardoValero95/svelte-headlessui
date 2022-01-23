@@ -1,7 +1,8 @@
 <script lang="ts">
   import { get_current_component } from "svelte/internal";
 
-  import { ActionArray, useActions } from "$lib/hooks/use-actions";
+  import type { ActionArray} from "$lib/hooks/use-actions";
+  import { useActions } from "$lib/hooks/use-actions";
 
   import { forwardEventsBuilder } from "../forwardEventsBuilder";
 

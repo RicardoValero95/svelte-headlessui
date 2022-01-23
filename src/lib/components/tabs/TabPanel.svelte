@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import { writable, Writable } from "svelte/store";
+  import type { Writable } from "svelte/store";
+  import { writable } from "svelte/store";
 
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import { useId } from "$lib/hooks/use-id";

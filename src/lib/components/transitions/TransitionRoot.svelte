@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount, setContext } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import { writable, Writable } from "svelte/store";
+  import type { Writable } from "svelte/store";
+  import { writable } from "svelte/store";
 
   import TransitionChild from "$lib/components/transitions/TransitionChild.svelte";
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
@@ -10,11 +11,12 @@
   import { State, useOpenClosed } from "$lib/internal/open-closed";
   import { match } from "$lib/utils/match";
 
+  import type {
+    NestingContextValues,
+    TransitionContextValues} from "./common.svelte";
   import {
     hasChildren,
-    NestingContextValues,
     NESTING_CONTEXT_NAME,
-    TransitionContextValues,
     TRANSITION_CONTEXT_NAME,
     TreeStates,
     useNesting,

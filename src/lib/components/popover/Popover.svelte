@@ -44,7 +44,8 @@
 <script lang="ts">
   import { getContext, setContext, onMount } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import { Readable, writable, Writable } from "svelte/store";
+  import type { Readable, Writable } from "svelte/store";
+  import { writable } from "svelte/store";
 
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import { useId } from "$lib/hooks/use-id";

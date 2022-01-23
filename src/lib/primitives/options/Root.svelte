@@ -14,7 +14,8 @@
   import { match } from "$lib/utils/match";
   import Render from "$lib/utils/Render.svelte";
 
-  import { StateDefinition, States, useRootProvider } from "./root";
+  import type { StateDefinition} from "./root";
+  import { States, useRootProvider } from "./root";
 
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     "change",

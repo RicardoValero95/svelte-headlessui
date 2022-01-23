@@ -40,7 +40,8 @@
 <script lang="ts">
   import { createEventDispatcher, getContext, setContext } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import { Readable, Writable, writable } from "svelte/store";
+  import type { Readable, Writable} from "svelte/store";
+  import { writable } from "svelte/store";
 
   import DescriptionProvider from "$lib/components/description/DescriptionProvider.svelte";
   import LabelProvider from "$lib/components/label/LabelProvider.svelte";

@@ -10,7 +10,8 @@
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import Render from "$lib/utils/Render.svelte";
 
-  import { useRadioGroupContext, Option } from "./RadioGroup.svelte";
+  import type { Option } from "./RadioGroup.svelte";
+  import { useRadioGroupContext } from "./RadioGroup.svelte";
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
 

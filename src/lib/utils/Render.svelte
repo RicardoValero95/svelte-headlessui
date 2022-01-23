@@ -26,12 +26,14 @@
 </script>
 
 <script lang="ts">
-  import { get_current_component, SvelteComponent } from "svelte/internal";
+  import type { SvelteComponent } from "svelte/internal";
+  import { get_current_component } from "svelte/internal";
 
   import type { ActionArray } from "$lib/hooks/use-actions";
+  import type {
+    SupportedElement} from "$lib/internal/elements";
   import {
-    getElementComponent,
-    SupportedElement,
+    getElementComponent
   } from "$lib/internal/elements";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
 

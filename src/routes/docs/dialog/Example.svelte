@@ -3,8 +3,6 @@
 
   import Portal from "$lib/components/portal/Portal.svelte";
 
-  import Nested from "./Nested.svelte";
-
   import {
     Dialog,
     DialogOverlay,
@@ -16,6 +14,9 @@
     Transition,
     TransitionChild,
   } from "$lib";
+  
+  import Nested from "./Nested.svelte";
+  
 
   const [popperRef, popperContent] = createPopperActions();
   const popperOptions = {

@@ -12,7 +12,8 @@
 <script lang="ts">
   import { getContext, setContext } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import { Writable, writable } from "svelte/store";
+  import type { Writable} from "svelte/store";
+  import { writable } from "svelte/store";
 
   import DescriptionProvider from "$lib/components/description/DescriptionProvider.svelte";
   import LabelProvider from "$lib/components/label/LabelProvider.svelte";

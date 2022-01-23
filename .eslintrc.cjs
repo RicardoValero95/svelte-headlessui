@@ -29,6 +29,7 @@ module.exports = {
   rules: {
     "no-empty-function": "off",
     "@typescript-eslint/no-empty-function": ["warn"],
+    "@typescript-eslint/consistent-type-imports": ["error"],
     "import/newline-after-import": ["warn"],
     "import/no-unresolved": [
       "warn",

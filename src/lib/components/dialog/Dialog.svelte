@@ -41,7 +41,8 @@
     onMount,
   } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import { Readable, writable, Writable } from "svelte/store";
+  import type { Readable, Writable } from "svelte/store";
+  import { writable } from "svelte/store";
 
   import DescriptionProvider from "$lib/components/description/DescriptionProvider.svelte";
   import FocusTrap from "$lib/components/focus-trap/FocusTrap.svelte";

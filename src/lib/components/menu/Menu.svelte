@@ -1,7 +1,8 @@
 <script lang="ts" context="module">
   import { getContext, setContext } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import { Readable, writable, Writable } from "svelte/store";
+  import type { Readable, Writable } from "svelte/store";
+  import { writable } from "svelte/store";
 
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import type { SupportedAs } from "$lib/internal/elements";

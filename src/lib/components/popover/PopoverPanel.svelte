@@ -26,9 +26,10 @@
   import { Keys } from "$lib/utils/keyboard";
   import Render, { Features } from "$lib/utils/Render.svelte";
 
+  import type {
+    StateDefinition} from "./Popover.svelte";
   import {
     PopoverStates,
-    StateDefinition,
     usePopoverContext,
   } from "./Popover.svelte";
 
