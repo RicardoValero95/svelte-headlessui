@@ -1,6 +1,6 @@
 <script lang="ts">
   import { get_current_component } from "svelte/internal";
-  import type { Writable} from "svelte/store";
+  import type { Writable } from "svelte/store";
   import { writable } from "svelte/store";
 
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
@@ -12,7 +12,6 @@
 
   import { useDisclosureContext, DisclosureStates } from "./Disclosure.svelte";
   import { usePanelContext } from "./DisclosurePanel.svelte";
-
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "button";
