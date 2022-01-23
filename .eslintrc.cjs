@@ -1,53 +1,17 @@
-const overrides = {
-  "import/newline-after-import": ["warn"],
-  "import/no-unresolved": [
-    "warn",
-    { ignore: ["^virtual", "^\\$lib", "^\\$app", "^\\/"] },
-  ],
-  "import/order": [
-    "error",
-    {
-      alphabetize: { order: "asc", caseInsensitive: true },
-      pathGroups: [
-        {
-          pattern: "$lib/**",
-          group: "internal",
-          position: "after",
-        },
-      ],
-      groups: [
-        "builtin",
-        "external",
-        "internal",
-        "parent",
-        "sibling",
-        "index",
-        "object",
-      ],
-      "newlines-between": "always",
-    },
-  ],
-};
-
 module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier",
     "plugin:import/recommended",
+    "prettier",
   ],
   plugins: ["svelte3", "@typescript-eslint"],
   overrides: [
     {
       files: ["*.svelte"],
       processor: "svelte3/svelte3",
-      rules: { ...overrides },
-    },
-    {
-      files: ["*.js"],
-      // rules: { ...overrides },
     },
   ],
   settings: {
@@ -63,6 +27,32 @@ module.exports = {
     node: true,
   },
   rules: {
-    ...overrides,
+    "no-empty-function": "off",
+    "@typescript-eslint/no-empty-function": ["warn"],
+    "import/newline-after-import": ["warn"],
+    "import/no-unresolved": [
+      "warn",
+      { ignore: ["^virtual", "^\\$lib", "^\\$app", "^\\$site", "^\\/"] },
+    ],
+    "import/order": [
+      "error",
+      {
+        alphabetize: { order: "asc", caseInsensitive: true },
+        pathGroups: [
+          { pattern: "$lib/**", group: "internal", position: "after" },
+          { pattern: "$lib", group: "internal", position: "after" },
+        ],
+        groups: [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+        ],
+        "newlines-between": "always",
+      },
+    ],
   },
 };

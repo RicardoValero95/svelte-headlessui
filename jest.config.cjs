@@ -14,6 +14,6 @@ module.exports = {
     "ts-jest": {
       babelConfig: true,
       useESM: true,
-    }
-  }
+    },
+  },
 };

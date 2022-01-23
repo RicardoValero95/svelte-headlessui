@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
 
   import { portal } from "$lib/hooks/use-portal";
-  import { useContext } from "$lib/internal/ContextStore.svelte";
+  import { useContext } from "$lib/internal/contextStore";
 
   let mounted = false;
 

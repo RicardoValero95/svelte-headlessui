@@ -8,7 +8,10 @@ export enum States {
   Closed,
 }
 
-export type ItemData = { textValue: string; disabled: boolean };
+export type ItemData = {
+  textValue: string;
+  disabled: boolean;
+};
 
 export type StateDefinition = {
   // State
@@ -28,7 +31,7 @@ export type StateDefinition = {
   search(value: string): void;
   clearSearch(): void;
   goToItem(focus: Focus, id?: string): void;
-  registerItem(id: string, dataRef: ItemData): void;
+  registerItem(id: string, data: ItemData): void;
   unregisterItem(id: string): void;
 };
 
