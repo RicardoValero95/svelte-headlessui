@@ -14,11 +14,8 @@ beforeEach(() => {
   document.body.innerHTML = "";
 });
 
-it("should be possible to use a Portal", () => {
-  // Dummy assertion to trick TS compiler
-  expect(Portal).not.toBe(PortalGroup);
-
-  expect(getPortalRoot()).toBe(null);
+it('should be possible to use a Portal', () => {
+  expect(getPortalRoot()).toBe(null)
 
   render(svelte`
     <main id="parent">
