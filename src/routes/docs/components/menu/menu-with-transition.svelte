@@ -1,8 +1,6 @@
 <script lang="ts">
   import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "$lib";
 
-  import SwitchWithPureTailwind from "../switch/switch-with-pure-tailwind.svelte";
-
   import { classNames } from "$site/helpers";
 
   function resolveClass({ active, disabled }) {
@@ -68,9 +66,6 @@
             </MenuItem>
             <MenuItem as="a" href="#license" class={resolveClass}>
               License
-            </MenuItem>
-            <MenuItem>
-              <SwitchWithPureTailwind />
             </MenuItem>
           </div>
 
