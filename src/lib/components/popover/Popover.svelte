@@ -51,7 +51,8 @@
   import { State, useOpenClosedProvider } from "$lib/internal/open-closed";
   import { usePopoverGroupContext } from "./PopoverGroup.svelte";
   import { getContext, setContext, onMount } from "svelte";
-  import { Readable, writable, Writable } from "svelte/store";
+  import type { Readable, Writable } from "svelte/store";
+  import { writable } from "svelte/store";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { get_current_component } from "svelte/internal";
   import type { SupportedAs } from "$lib/internal/elements";
@@ -136,7 +137,11 @@
   onMount(() => registerPopover?.(registerBag));
 
   // Handle focus out
-  function handleFocus() {
+  function handleFocus(event: FocusEvent) {
+    if (event.target === window.document.body) {
+      // Workaround for a SvelteKit issue: https://github.com/sveltejs/kit/issues/3501
+      return;
+    }
     if (popoverState !== PopoverStates.Open) return;
     if (isFocusWithinPopoverGroup()) return;
     if (!button) return;
