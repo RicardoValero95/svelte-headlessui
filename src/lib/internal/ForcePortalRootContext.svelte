@@ -1,17 +1,19 @@
 <script lang="ts" context="module">
-  import { getContext, setContext } from "svelte";
-  import type { Writable } from "svelte/store";
-  import { writable } from "svelte/store";
+  export const [getPortalRootContext, setPortalRootContext] =
+    createContextStore<boolean>();
 
-  const CONTEXT_NAME = Symbol("headlessui-force-portal-root-context");
-
-  export const usePortalRoot = (): Writable<boolean> | undefined =>
-    getContext(CONTEXT_NAME);
+  export function usePortalRootContext() {
+    return getPortalRootContext();
+  }
 </script>
 
 <script lang="ts">
+  import { writable } from "svelte/store";
+
+  import { createContextStore } from "./context-store";
+
   export let force: boolean;
-  setContext(CONTEXT_NAME, writable(force));
+  setPortalRootContext(writable(force));
 </script>
 
 <slot />

@@ -8,7 +8,7 @@
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import Render from "$lib/utils/Render.svelte";
 
-  import { useDescriptionContext } from "./DescriptionProvider.svelte";
+  import { useDescriptionContext } from ".";
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
   export let as: SupportedAs = "p";

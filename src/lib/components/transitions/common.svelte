@@ -1,8 +1,6 @@
 <script lang="ts" context="module">
-  import { getContext } from "svelte";
-  import type { Readable, Writable } from "svelte/store";
-
   import type { useId } from "$lib/hooks/use-id";
+  import { createContextStore } from "$lib/internal/context-store";
   import { match } from "$lib/utils/match";
   import { RenderStrategy } from "$lib/utils/Render.svelte";
 
@@ -30,35 +28,30 @@
     initialShow: boolean;
   }
 
-  export const TRANSITION_CONTEXT_NAME = "headlessui-transition-context";
-  export const NESTING_CONTEXT_NAME = "headlessui-nesting-context";
+  const COMPONENT_NAME = "TransitionRoot";
+
+  export const [getTransitionContext, setTransitionContext] =
+    createContextStore<TransitionContextValues>();
+
   export function hasTransitionContext() {
-    return getContext(TRANSITION_CONTEXT_NAME) !== undefined;
+    return getTransitionContext() !== undefined;
   }
-  export function useTransitionContext(): Readable<TransitionContextValues> {
-    let context = getContext(TRANSITION_CONTEXT_NAME) as
-      | Writable<TransitionContextValues>
-      | undefined;
-    if (context === undefined) {
-      throw new Error(
-        "A <TransitionChild /> is used but it is missing a parent <TransitionRoot />."
-      );
-    }
-
-    return context;
+  export function useTransitionContext(childName: string) {
+    const context = getTransitionContext();
+    if (context) return context;
+    throw new Error(
+      `<${childName} /> is missing a parent <${COMPONENT_NAME} /> component.`
+    );
   }
+  export const [getParentNestingContext, setParentNestingContext] =
+    createContextStore<NestingContextValues>();
 
-  export function useParentNesting(): Readable<NestingContextValues> {
-    let context = getContext(NESTING_CONTEXT_NAME) as
-      | Writable<NestingContextValues>
-      | undefined;
-    if (context === undefined) {
-      throw new Error(
-        "A <TransitionChild /> is used but it is missing a parent <TransitionRoot />."
-      );
-    }
-
-    return context;
+  export function useParentNestingContext(childName: string) {
+    let context = getParentNestingContext();
+    if (context) return context;
+    throw new Error(
+      `<${childName} /> is missing a parent <${COMPONENT_NAME} /> component.`
+    );
   }
 
   export function hasChildren(

@@ -10,12 +10,13 @@
 
   import { PopoverStates, usePopoverContext } from "./Popover.svelte";
 
+  const COMPONENT_NAME = "PopoverOverlay";
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "div";
   export let use: HTMLActionArray = [];
 
-  let api = usePopoverContext("PopoverOverlay");
+  let api = usePopoverContext(COMPONENT_NAME);
   let id = `headlessui-popover-overlay-${useId()}`;
 
   let openClosedState = useOpenClosed();
@@ -40,7 +41,7 @@
   {as}
   {slotProps}
   use={[...use, forwardEvents]}
-  name={"PopoverOverlay"}
+  name={COMPONENT_NAME}
   on:click={handleClick}
   aria-hidden
   {visible}

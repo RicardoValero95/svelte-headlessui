@@ -3166,7 +3166,7 @@ describe("Keyboard interactions", () => {
         // Open menu
         await click(getMenuButton())
 
-        let items = getMenuItems()
+        const items = getMenuItems()
 
         // Search for bob
         await type(word('b'))

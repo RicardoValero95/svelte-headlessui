@@ -10,15 +10,16 @@
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import Render, { Features } from "$lib/utils/Render.svelte";
 
-  import { useTabsContext } from "./TabGroup.svelte";
+  import { useTabGroupContext } from "./TabGroup.svelte";
 
+  const COMPONENT_NAME = "TabPanel";
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "div";
   export let use: HTMLActionArray = [];
 
   let elementRef: Writable<HTMLElement | null> = writable(null);
-  let api = useTabsContext("TabPanel");
+  let api = useTabGroupContext(COMPONENT_NAME);
   let id = `headlessui-tabs-panel-${useId()}`;
 
   $: panelData = { id, ref: elementRef };
@@ -33,7 +34,7 @@
 
   $: propsWeControl = {
     id,
-    role: "tabpanel",
+    role: COMPONENT_NAME.toLocaleLowerCase(),
     "aria-labelledby": $api.tabs[myIndex]?.id,
     tabIndex: selected ? 0 : -1,
   };
@@ -49,7 +50,7 @@
   {...{ ...$$restProps, ...propsWeControl }}
   {as}
   use={[...use, forwardEvents]}
-  name={"TabPanel"}
+  name={COMPONENT_NAME}
   {slotProps}
   bind:el={$elementRef}
   visible={selected}

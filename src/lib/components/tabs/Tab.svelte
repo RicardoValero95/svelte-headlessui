@@ -12,8 +12,9 @@
   import Render from "$lib/utils/Render.svelte";
   import { resolveButtonType } from "$lib/utils/resolve-button-type";
 
-  import { useTabsContext } from "./TabGroup.svelte";
+  import { useTabGroupContext } from "./TabGroup.svelte";
 
+  const COMPONENT_NAME = "Tab";
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "button";
@@ -21,7 +22,7 @@
 
   export let disabled = false;
 
-  let api = useTabsContext("Tab");
+  let api = useTabGroupContext(COMPONENT_NAME);
   let id = `headlessui-tabs-tab-${useId()}`;
   let tabRef: HTMLElement | null = null;
 
@@ -93,7 +94,7 @@
   $: myPanelRef = $api.panels[myIndex]?.ref;
   $: propsWeControl = {
     id,
-    role: "tab",
+    role: COMPONENT_NAME.toLowerCase(),
     type: resolveButtonType({ type: $$props.type, as }, tabRef),
     "aria-controls": $myPanelRef ? $api.panels[myIndex]?.id : undefined,
     "aria-selected": selected,
@@ -112,7 +113,7 @@
   {as}
   {slotProps}
   use={[...use, forwardEvents]}
-  name={"Tab"}
+  name={COMPONENT_NAME}
   bind:el={tabRef}
   on:keydown={handleKeyDown}
   on:click={handleSelection}

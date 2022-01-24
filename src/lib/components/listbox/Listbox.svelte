@@ -1,61 +1,6 @@
-<script lang="ts" context="module">
-  export enum ListboxStates {
-    Open,
-    Closed,
-  }
-  export type ListboxOptionDataRef = {
-    textValue: string;
-    disabled: boolean;
-    value: unknown;
-  };
-
-  export type StateDefinition = {
-    // State
-    listboxState: ListboxStates;
-    value: unknown;
-    orientation: "vertical" | "horizontal";
-
-    labelRef: Writable<HTMLLabelElement | null>;
-    buttonRef: Writable<HTMLButtonElement | null>;
-    optionsRef: Writable<HTMLElement | null>;
-
-    disabled: boolean;
-    options: { id: string; dataRef: ListboxOptionDataRef }[];
-    searchQuery: string;
-    activeOptionIndex: number | null;
-
-    // State mutators
-    closeListbox(): void;
-    openListbox(): void;
-    goToOption(focus: Focus, id?: string): void;
-    search(value: string): void;
-    clearSearch(): void;
-    registerOption(id: string, dataRef: ListboxOptionDataRef): void;
-    unregisterOption(id: string): void;
-    select(value: unknown): void;
-  };
-
-  const LISTBOX_CONTEXT_NAME = "headlessui-listbox-context";
-  export function useListboxContext(
-    component: string
-  ): Readable<StateDefinition> {
-    let context: Writable<StateDefinition> | undefined =
-      getContext(LISTBOX_CONTEXT_NAME);
-
-    if (context === undefined) {
-      throw new Error(
-        `<${component} /> is missing a parent <Listbox /> component.`
-      );
-    }
-
-    return context;
-  }
-</script>
-
 <script lang="ts">
-  import { createEventDispatcher, getContext, setContext } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import type { Readable, Writable } from "svelte/store";
   import { writable } from "svelte/store";
 
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
@@ -68,6 +13,12 @@
   } from "$lib/utils/calculate-active-index";
   import { match } from "$lib/utils/match";
   import Render from "$lib/utils/Render.svelte";
+
+  import {
+    ListboxStates,
+    setListboxContext,
+    type StateDefinition,
+  } from "./listbox";
 
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     "change",
@@ -92,7 +43,7 @@
   let searchQuery: StateDefinition["searchQuery"] = "";
   let activeOptionIndex: StateDefinition["activeOptionIndex"] = null;
 
-  let api: Writable<StateDefinition> = writable({
+  let api = writable<StateDefinition>({
     listboxState,
     value,
     labelRef,
@@ -218,7 +169,7 @@
       dispatch("change", newValue);
     },
   });
-  setContext(LISTBOX_CONTEXT_NAME, api);
+  setListboxContext(api);
 
   let openClosedState = writable(State.Closed);
   useOpenClosedProvider(openClosedState);

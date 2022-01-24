@@ -12,7 +12,7 @@
   import { Keys } from "$lib/utils/keyboard";
   import Render, { Features } from "$lib/utils/Render.svelte";
 
-  import { useMenuContext, MenuStates } from "./Menu.svelte";
+  import { MenuStates, useMenuContext } from "./Menu.svelte";
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
   export let as: SupportedAs = "div";

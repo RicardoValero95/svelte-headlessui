@@ -1,21 +1,20 @@
 <script lang="ts" context="module">
-  import { getContext, setContext } from "svelte";
-  import type { Readable} from "svelte/store";
-  import { writable } from "svelte/store";
+  export const [getPortalGroupContext, setPortalGroupContext] =
+    createContextStore<HTMLElement | null>();
 
-  const PORTAL_GROUP_CONTEXT_NAME = "headlessui-portal-group-context";
-
-  export function usePortalGroupContext():
-    | Readable<HTMLElement | null>
-    | undefined {
-    return getContext(PORTAL_GROUP_CONTEXT_NAME);
+  export function usePortalGroupContext() {
+    return getPortalGroupContext();
   }
 </script>
 
 <script lang="ts">
+  import { writable } from "svelte/store";
+
+  import { createContextStore } from "$lib/internal/context-store";
+
   export let target: HTMLElement | null;
   let targetStore = writable(target);
-  setContext(PORTAL_GROUP_CONTEXT_NAME, targetStore);
+  setPortalGroupContext(targetStore);
   $: targetStore.set(target);
 </script>
 

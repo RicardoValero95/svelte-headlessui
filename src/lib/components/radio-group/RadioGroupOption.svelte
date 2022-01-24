@@ -13,6 +13,7 @@
   import type { Option } from "./RadioGroup.svelte";
   import { useRadioGroupContext } from "./RadioGroup.svelte";
 
+  const COMPONENT_NAME = "RadioGroupOption";
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "div";
@@ -25,7 +26,7 @@
 
   export let value: unknown;
   export let disabled = false;
-  let api = useRadioGroupContext("RadioGroupOption");
+  let api = useRadioGroupContext(COMPONENT_NAME);
   let id = `headlessui-radiogroup-option-${useId()}`;
   let optionRef: HTMLElement | null = null;
   $: propsRef = { value, disabled };
@@ -84,7 +85,7 @@
       {as}
       {slotProps}
       use={[...use, forwardEvents]}
-      name={"RadioGroupOption"}
+      name={COMPONENT_NAME}
       bind:el={optionRef}
       aria-labelledby={labelledby}
       aria-describedby={describedby}

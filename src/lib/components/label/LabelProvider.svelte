@@ -1,21 +1,10 @@
-<script lang="ts" context="module">
-  export interface LabelContext {
-    name?: string;
-    props?: object;
-    register: (value: string) => void;
-    labelIds?: string;
-  }
-
-  const LABEL_CONTEXT_NAME = "headlessui-label-context";
-  export function useLabelContext(): Writable<LabelContext> | undefined {
-    return getContext(LABEL_CONTEXT_NAME);
-  }
-</script>
-
 <script lang="ts">
-  import { getContext, setContext } from "svelte";
   import type { Writable } from "svelte/store";
   import { writable } from "svelte/store";
+
+  import { setLabelContext } from ".";
+  import type { LabelContext } from ".";
+
   export let name: string;
   let labelIds: string[] = [];
   let contextStore: Writable<LabelContext> = writable({
@@ -23,7 +12,7 @@
     register,
     props: $$restProps,
   });
-  setContext(LABEL_CONTEXT_NAME, contextStore);
+  setLabelContext(contextStore);
 
   $: contextStore.set({
     name,

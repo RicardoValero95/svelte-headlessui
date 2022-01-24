@@ -1,10 +1,10 @@
 <script lang="ts">
   import { portal } from "$lib/hooks/use-portal";
-  import { usePortalRoot } from "$lib/internal/ForcePortalRootContext.svelte";
+  import { usePortalRootContext } from "$lib/internal/ForcePortalRootContext.svelte";
 
   import { usePortalGroupContext } from "./PortalGroup.svelte";
 
-  let forceInRoot = usePortalRoot();
+  let forceInRoot = usePortalRootContext();
   let groupTarget = usePortalGroupContext();
   $: target = (() => {
     // Group context is used, but still null

@@ -6,14 +6,15 @@
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import Render from "$lib/utils/Render.svelte";
 
-  import { useTabsContext } from "./TabGroup.svelte";
+  import { useTabGroupContext } from "./TabGroup.svelte";
 
+  const COMPONENT_NAME = "TabPanels";
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "div";
   export let use: HTMLActionArray = [];
 
-  let api = useTabsContext("TabPanels");
+  let api = useTabGroupContext(COMPONENT_NAME);
   $: slotProps = { selectedIndex: $api.selectedIndex };
 </script>
 
@@ -22,7 +23,7 @@
   {as}
   {slotProps}
   use={[...use, forwardEvents]}
-  name={"TabPanels"}
+  name={COMPONENT_NAME}
 >
   <slot {...slotProps} />
 </Render>

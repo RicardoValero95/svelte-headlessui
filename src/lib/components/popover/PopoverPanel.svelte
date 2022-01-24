@@ -1,19 +1,25 @@
 <script lang="ts" context="module">
-  export type PopoverPanelContext = string | null;
+  export type PopoverPanelContext = { id: string | null };
 
-  const POPOVER_PANEL_CONTEXT_NAME = "headlessui-popover-panel-context";
-  export function usePopoverPanelContext():
-    | StateDefinition["panelId"]
-    | undefined {
-    return getContext(POPOVER_PANEL_CONTEXT_NAME);
+  export const [getPopoverPanelContext, setPopoverPanelContext] =
+    createContextStore<PopoverPanelContext>();
+
+  const COMPONENT_NAME = "PopoverPanel";
+  export function usePopoverPanelContext(childName: string) {
+    const context = getPopoverPanelContext();
+    if (context) return context;
+    // throw new Error(
+    //   `<${childName} /> is missing a parent <${COMPONENT_NAME} /> component.`
+    // );
   }
 </script>
 
 <script lang="ts">
-  import { getContext, setContext } from "svelte";
   import { get_current_component } from "svelte/internal";
+  import { writable } from "svelte/store";
 
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { createContextStore } from "$lib/internal/context-store";
   import type { SupportedAs } from "$lib/internal/elements";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { State, useOpenClosed } from "$lib/internal/open-closed";
@@ -26,12 +32,7 @@
   import { Keys } from "$lib/utils/keyboard";
   import Render, { Features } from "$lib/utils/Render.svelte";
 
-  import type {
-    StateDefinition} from "./Popover.svelte";
-  import {
-    PopoverStates,
-    usePopoverContext,
-  } from "./Popover.svelte";
+  import { PopoverStates, usePopoverContext } from "./Popover.svelte";
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
@@ -40,8 +41,8 @@
 
   export let focus = false;
 
-  let api = usePopoverContext("PopoverPanel");
-  setContext(POPOVER_PANEL_CONTEXT_NAME, $api.panelId);
+  let api = usePopoverContext(COMPONENT_NAME);
+  setPopoverPanelContext(writable({ id: $api.panelId }));
 
   let panelStore = $api.panel;
   let apiButton = $api.button;
@@ -149,7 +150,7 @@
   {as}
   {slotProps}
   use={[...use, forwardEvents]}
-  name={"PopoverPanel"}
+  name={COMPONENT_NAME}
   bind:el={$panelStore}
   on:keydown={handleKeydown}
   {visible}

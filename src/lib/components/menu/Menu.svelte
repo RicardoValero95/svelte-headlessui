@@ -1,10 +1,10 @@
 <script lang="ts" context="module">
-  import { getContext, setContext } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import type { Readable, Writable } from "svelte/store";
+  import type { Writable } from "svelte/store";
   import { writable } from "svelte/store";
 
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { createContextStore } from "$lib/internal/context-store";
   import type { SupportedAs } from "$lib/internal/elements";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { State, useOpenClosedProvider } from "$lib/internal/open-closed";
@@ -39,20 +39,15 @@
     unregisterItem(id: string): void;
   };
 
-  const MENU_CONTEXT_NAME = "headlessui-menu-context";
+  export const [getMenuContext, setMenuContext] =
+    createContextStore<StateDefinition>();
 
-  export function useMenuContext(
-    componentName: string
-  ): Readable<StateDefinition> {
-    let context: Writable<StateDefinition> | undefined =
-      getContext(MENU_CONTEXT_NAME);
-
-    if (context === undefined) {
-      throw new Error(
-        `<${componentName} /> is missing a parent <Menu /> component.`
-      );
-    }
-    return context;
+  export function useMenuContext(componentName: string) {
+    const context = getMenuContext();
+    if (context) return context;
+    throw new Error(
+      `<${componentName} /> is missing a parent <Menu /> component.`
+    );
   }
 </script>
 
@@ -61,73 +56,74 @@
   export let as: SupportedAs = "div";
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
-  let menuState: StateDefinition["menuState"] = MenuStates.Closed;
   let buttonStore: StateDefinition["buttonStore"] = writable(null);
   let itemsStore: StateDefinition["itemsStore"] = writable(null);
-  let items: StateDefinition["items"] = [];
-  let searchQuery: StateDefinition["searchQuery"] = "";
-  let activeItemIndex: StateDefinition["activeItemIndex"] = null;
 
   let api: Writable<StateDefinition> = writable({
-    menuState,
+    menuState: MenuStates.Closed,
     buttonStore,
-    itemsStore: itemsStore,
-    items,
-    searchQuery,
-    activeItemIndex,
+    itemsStore,
+    items: [],
+    searchQuery: "",
+    activeItemIndex: null,
     closeMenu: () => {
-      menuState = MenuStates.Closed;
-      activeItemIndex = null;
+      $api.menuState = MenuStates.Closed;
+      $api.activeItemIndex = null;
     },
-    openMenu: () => (menuState = MenuStates.Open),
+    openMenu: () => ($api.menuState = MenuStates.Open),
     goToItem(focus: Focus, id?: string) {
       let nextActiveItemIndex = calculateActiveIndex(
         focus === Focus.Specific
           ? { focus: Focus.Specific, id: id! }
           : { focus: focus as Exclude<Focus, Focus.Specific> },
         {
-          resolveItems: () => items,
-          resolveActiveIndex: () => activeItemIndex,
+          resolveItems: () => $api.items,
+          resolveActiveIndex: () => $api.activeItemIndex,
           resolveId: (item) => item.id,
           resolveDisabled: (item) => item.data.disabled,
         }
       );
 
-      if (searchQuery === "" && activeItemIndex === nextActiveItemIndex) return;
-      searchQuery = "";
-      activeItemIndex = nextActiveItemIndex;
+      if (
+        $api.searchQuery === "" &&
+        $api.activeItemIndex === nextActiveItemIndex
+      )
+        return;
+      $api.searchQuery = "";
+      $api.activeItemIndex = nextActiveItemIndex;
     },
     search(value: string) {
-      searchQuery += value.toLowerCase();
+      $api.searchQuery += value.toLowerCase();
 
       let reorderedItems =
-        activeItemIndex !== null
-          ? items
-              .slice(activeItemIndex + 1)
-              .concat(items.slice(0, activeItemIndex + 1))
-          : items;
+        $api.activeItemIndex !== null
+          ? $api.items
+              .slice($api.activeItemIndex + 1)
+              .concat($api.items.slice(0, $api.activeItemIndex + 1))
+          : $api.items;
 
       let matchingItem = reorderedItems.find(
         (item) =>
-          item.data.textValue.startsWith(searchQuery) && !item.data.disabled
+          item.data.textValue.startsWith($api.searchQuery) &&
+          !item.data.disabled
       );
 
-      let matchIdx = matchingItem ? items.indexOf(matchingItem) : -1;
-      if (matchIdx === -1 || matchIdx === activeItemIndex) return;
+      let matchIdx = matchingItem ? $api.items.indexOf(matchingItem) : -1;
+      if (matchIdx === -1 || matchIdx === $api.activeItemIndex) return;
 
-      activeItemIndex = matchIdx;
+      $api.activeItemIndex = matchIdx;
     },
     clearSearch() {
-      searchQuery = "";
+      $api.searchQuery = "";
     },
     registerItem(id: string, data: MenuItemData) {
       if (!$itemsStore) {
         // We haven't mounted yet so just append
-        items = [...items, { id, data }];
+        $api.items = [...$api.items, { id, data }];
         return;
       }
       let currentActiveItem =
-        activeItemIndex !== null ? items[activeItemIndex] : null;
+        $api.activeItemIndex !== null ? $api.items[$api.activeItemIndex] : null;
 
       let orderMap = Array.from(
         $itemsStore.querySelectorAll('[id^="headlessui-menu-item-"]')!
@@ -137,25 +133,25 @@
         {}
       ) as Record<string, number>;
 
-      let nextItems = [...items, { id, data }];
+      let nextItems = [...$api.items, { id, data }];
       nextItems.sort((a, z) => orderMap[a.id] - orderMap[z.id]);
-      items = nextItems;
+      $api.items = nextItems;
 
       // Maintain the correct item active
-      activeItemIndex = (() => {
+      $api.activeItemIndex = (() => {
         if (currentActiveItem === null) return null;
-        return items.indexOf(currentActiveItem);
+        return $api.items.indexOf(currentActiveItem);
       })();
     },
     unregisterItem(id: string) {
-      let nextItems = items.slice();
+      let nextItems = $api.items.slice();
       let currentActiveItem =
-        activeItemIndex !== null ? nextItems[activeItemIndex] : null;
+        $api.activeItemIndex !== null ? nextItems[$api.activeItemIndex] : null;
       let idx = nextItems.findIndex((a) => a.id === id);
       if (idx !== -1) nextItems.splice(idx, 1);
-      items = nextItems;
-      activeItemIndex = (() => {
-        if (idx === activeItemIndex) return null;
+      $api.items = nextItems;
+      $api.activeItemIndex = (() => {
+        if (idx === $api.activeItemIndex) return null;
         if (currentActiveItem === null) return null;
 
         // If we removed the item before the actual active index, then it would be out of sync. To
@@ -164,27 +160,20 @@
       })();
     },
   });
-  setContext(MENU_CONTEXT_NAME, api);
+  setMenuContext(api);
 
   $: api.update((obj) => {
     return {
       ...obj,
-      menuState,
-      buttonStore,
       itemsStore,
-      items,
-      searchQuery,
-      activeItemIndex,
     };
   });
 
   function handleWindowMousedown(event: MouseEvent): void {
     let target = event.target as HTMLElement;
     let active = document.activeElement;
-
-    if (menuState !== MenuStates.Open) return;
+    if ($api.menuState !== MenuStates.Open) return;
     if ($buttonStore?.contains(target)) return;
-
     if (!$itemsStore?.contains(target)) $api.closeMenu();
     if (active !== document.body && active?.contains(target)) return; // Keep focus on newly clicked/focused element
     if (!event.defaultPrevented) $buttonStore?.focus({ preventScroll: true });
@@ -193,12 +182,12 @@
   let openClosedState: Writable<State> | undefined = writable(State.Closed);
   useOpenClosedProvider(openClosedState);
 
-  $: $openClosedState = match(menuState, {
+  $: $openClosedState = match($api.menuState, {
     [MenuStates.Open]: State.Open,
     [MenuStates.Closed]: State.Closed,
   });
 
-  $: slotProps = { open: menuState === MenuStates.Open };
+  $: slotProps = { open: $api.menuState === MenuStates.Open };
 </script>
 
 <svelte:window on:mousedown={handleWindowMousedown} />

@@ -18,23 +18,25 @@
   import { usePopoverGroupContext } from "./PopoverGroup.svelte";
   import { usePopoverPanelContext } from "./PopoverPanel.svelte";
 
+  const COMPONENT_NAME = "PopoverButton";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
 
   export let as: SupportedAs = "button";
   export let use: HTMLActionArray = [];
 
   export let disabled = false;
-  let api = usePopoverContext("PopoverButton");
+  let api = usePopoverContext(COMPONENT_NAME);
 
   let apiButton = $api.button;
   let ourStore = apiButton;
 
-  let groupContext = usePopoverGroupContext();
-  let closeOthers = groupContext?.closeOthers;
+  let groupContext = usePopoverGroupContext(COMPONENT_NAME);
+  let closeOthers = $groupContext?.closeOthers;
 
-  let panelContext = usePopoverPanelContext();
+  let panelContext = usePopoverPanelContext(COMPONENT_NAME);
   let isWithinPanel =
-    panelContext === null ? false : panelContext === $api.panelId;
+    $panelContext === undefined ? false : $panelContext.id === $api.panelId;
   if (isWithinPanel) {
     ourStore = writable();
   }
@@ -198,7 +200,7 @@
   {as}
   {slotProps}
   use={[...use, forwardEvents]}
-  name={"PopoverButton"}
+  name={COMPONENT_NAME}
   bind:el={$ourStore}
   on:click={handleClick}
   on:keydown={handleKeyDown}

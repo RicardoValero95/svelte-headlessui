@@ -1,12 +1,15 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  import { get_current_component } from "svelte/internal";
+
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
-  import Render from "$lib/utils/Render.svelte";
   import { useId } from "$lib/hooks/use-id";
   import type { SupportedAs } from "$lib/internal/elements";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
-  import { onMount } from "svelte";
-  import { get_current_component } from "svelte/internal";
-  import { useLabelContext } from "./LabelProvider.svelte";
+  import Render from "$lib/utils/Render.svelte";
+
+  import { useLabelContext } from ".";
+
   const forwardEvents = forwardEventsBuilder(get_current_component());
   export let as: SupportedAs = "label";
   export let use: HTMLActionArray = [];

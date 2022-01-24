@@ -30,7 +30,7 @@
     "aria-hidden": true,
   };
 
-  $: slotProps = { open: $api.dialogState === DialogStates.Open };
+  $: slotProps = { open: $api.state === DialogStates.Open };
 </script>
 
 <Render

@@ -12,7 +12,7 @@
   import { match } from "$lib/utils/match";
   import Render, { Features } from "$lib/utils/Render.svelte";
 
-  import { ListboxStates, useListboxContext } from "./Listbox.svelte";
+  import { ListboxStates, useListboxContext } from "./listbox";
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
   export let as: SupportedAs = "ul";

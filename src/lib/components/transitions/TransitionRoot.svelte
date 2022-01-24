@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, setContext } from "svelte";
+  import { onMount } from "svelte";
   import { get_current_component } from "svelte/internal";
   import type { Writable } from "svelte/store";
   import { writable } from "svelte/store";
@@ -13,13 +13,14 @@
 
   import type {
     NestingContextValues,
-    TransitionContextValues} from "./common.svelte";
+    TransitionContextValues,
+  } from "./common.svelte";
   import {
     hasChildren,
-    NESTING_CONTEXT_NAME,
-    TRANSITION_CONTEXT_NAME,
     TreeStates,
     useNesting,
+    setParentNestingContext,
+    setTransitionContext,
   } from "./common.svelte";
 
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
@@ -96,9 +97,8 @@
       state = TreeStates.Hidden;
     }
   }
-
-  setContext(NESTING_CONTEXT_NAME, nestingBag);
-  setContext(TRANSITION_CONTEXT_NAME, transitionBag);
+  setParentNestingContext(nestingBag);
+  setTransitionContext(transitionBag);
 </script>
 
 {#if state === TreeStates.Visible || $$props.unmount === false}

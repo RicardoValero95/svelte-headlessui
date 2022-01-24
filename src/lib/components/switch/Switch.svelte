@@ -2,8 +2,8 @@
   import { createEventDispatcher } from "svelte";
   import { get_current_component } from "svelte/internal";
 
-  import { useDescriptionContext } from "$lib/components/description/DescriptionProvider.svelte";
-  import { useLabelContext } from "$lib/components/label/LabelProvider.svelte";
+  import { useDescriptionContext } from "$lib/components/description";
+  import { useLabelContext } from "$lib/components/label";
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import { useId } from "$lib/hooks/use-id";
   import type { SupportedAs } from "$lib/internal/elements";

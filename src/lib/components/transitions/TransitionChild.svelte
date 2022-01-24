@@ -4,14 +4,15 @@
   import type { Writable } from "svelte/store";
   import { writable } from "svelte/store";
 
-  import type {
-    NestingContextValues} from "$lib/components/transitions/common.svelte";
+  import {
+    setParentNestingContext,
+    type NestingContextValues,
+  } from "$lib/components/transitions/common.svelte";
   import {
     hasChildren,
-    NESTING_CONTEXT_NAME,
     TreeStates,
     useNesting,
-    useParentNesting,
+    useParentNestingContext,
     useTransitionContext,
   } from "$lib/components/transitions/common.svelte";
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
@@ -23,6 +24,7 @@
   import Render, { Features, RenderStrategy } from "$lib/utils/Render.svelte";
   import { Reason, transition } from "$lib/utils/transition";
 
+  const COMPONENT_NAME = "TransitionChild";
   const forwardEvents = forwardEventsBuilder(get_current_component(), [
     "beforeEnter",
     "beforeLeave",
@@ -45,8 +47,8 @@
 
   let container: HTMLElement | null = null;
 
-  let transitionContext = useTransitionContext();
-  let nestingContext = useParentNesting();
+  let transitionContext = useTransitionContext(COMPONENT_NAME);
+  let nestingContext = useParentNestingContext(COMPONENT_NAME);
   let state =
     $transitionContext.initialShow || $$props.unmount !== false
       ? TreeStates.Visible
@@ -170,8 +172,8 @@
       initial = false;
     }
   }
+  setParentNestingContext(nesting);
 
-  setContext(NESTING_CONTEXT_NAME, nesting);
   let openClosedState: Writable<State> = writable(State.Closed);
   useOpenClosedProvider(openClosedState);
 
@@ -193,7 +195,7 @@
   {...$$restProps}
   {as}
   use={[...use, forwardEvents]}
-  name={"TransitionChild"}
+  name={COMPONENT_NAME}
   bind:el={container}
   class={classes}
   visible={state === TreeStates.Visible}

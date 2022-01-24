@@ -22,34 +22,28 @@
     unregisterPanel(panel: PanelData): void;
   };
 
-  const TABS_CONTEXT_NAME = "headlessui-tabs-context";
+  export const [getTabGroupContext, setTabGroupContext] =
+    createContextStore<StateDefinition>();
 
-  export function useTabsContext(component: string): Readable<StateDefinition> {
-    let context: Writable<StateDefinition> | undefined =
-      getContext(TABS_CONTEXT_NAME);
+  const COMPONENT_NAME = "TabGroup";
 
-    if (context === undefined) {
-      throw new Error(
-        `<${component} /> is missing a parent <TabGroup /> component.`
-      );
-    }
-
-    return context;
+  export function useTabGroupContext(childName: string) {
+    const context = getTabGroupContext();
+    if (context) return context;
+    throw new Error(
+      `<${childName} /> is missing a parent <${COMPONENT_NAME} /> component.`
+    );
   }
 </script>
 
 <script lang="ts">
-  import {
-    createEventDispatcher,
-    getContext,
-    onMount,
-    setContext,
-  } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { get_current_component } from "svelte/internal";
   import type { Readable, Writable } from "svelte/store";
   import { writable } from "svelte/store";
 
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { createContextStore } from "$lib/internal/context-store";
   import type { SupportedAs } from "$lib/internal/elements";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import Render from "$lib/utils/Render.svelte";
@@ -121,7 +115,7 @@
       panels = panels.filter((p) => p !== panel);
     },
   });
-  setContext(TABS_CONTEXT_NAME, api);
+  setTabGroupContext(api);
 
   $: api.update((obj) => {
     return {
@@ -178,7 +172,7 @@
   {as}
   {slotProps}
   use={[...use, forwardEvents]}
-  name={"TabGroup"}
+  name={COMPONENT_NAME}
 >
   <slot {...slotProps} />
 </Render>

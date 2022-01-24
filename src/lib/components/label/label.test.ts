@@ -1,10 +1,12 @@
 import { render } from "@testing-library/svelte";
+import { tick } from "svelte";
+import svelte from "svelte-inline-compile";
+import { writable, type Writable } from "svelte/store";
+
+import { suppressConsoleLogs } from "$lib/test-utils/suppress-console-logs";
+
 import Label from "./Label.svelte";
 import LabelProvider from "./LabelProvider.svelte";
-import svelte from "svelte-inline-compile";
-import { suppressConsoleLogs } from "$lib/test-utils/suppress-console-logs";
-import { writable, type Writable } from "svelte/store";
-import { tick } from "svelte";
 
 let mockId = 0;
 jest.mock("../../hooks/use-id", () => {
@@ -30,8 +32,8 @@ it(
 );
 
 it("should be possible to use a LabelProvider without using a Label", async () => {
-  let { container } = render(svelte`
-  <LabelProvider let:labelledby>
+  const { container } = render(svelte`
+  <LabelProvider name={"test"} let:labelledby>
     <div aria-labelledby={labelledby}>
       No label
     </div>
@@ -45,8 +47,8 @@ it("should be possible to use a LabelProvider without using a Label", async () =
 });
 
 it("should be possible to use a LabelProvider and a single Label, and have them linked", async () => {
-  let { container } = render(svelte`
-  <LabelProvider let:labelledby>
+  const { container } = render(svelte`
+  <LabelProvider name={"test"} let:labelledby>
     <div aria-labelledby={labelledby}>
       <Label>I am a label</Label>
       <span>Contents</span>
@@ -73,8 +75,8 @@ it("should be possible to use a LabelProvider and a single Label, and have them 
 });
 
 it("should be possible to use a LabelProvider and multiple Label components, and have them linked", async () => {
-  let { container } = render(svelte`
-  <LabelProvider let:labelledby>
+  const { container } = render(svelte`
+  <LabelProvider name={"test"} let:labelledby>
     <div aria-labelledby={labelledby}>
       <Label>I am a label</Label>
       <span>Contents</span>
@@ -110,8 +112,8 @@ it("should be possible to use a LabelProvider and multiple Label components, and
 });
 
 it("should be possible to render a Label with an `as` prop", async () => {
-  let { container } = render(svelte`
-  <LabelProvider let:labelledby>
+  const { container } = render(svelte`
+  <LabelProvider name={"test"} let:labelledby>
     <div aria-labelledby={labelledby}>
       <Label as="p">I am a label</Label>
       <span>Contents</span>
@@ -138,9 +140,9 @@ it("should be possible to render a Label with an `as` prop", async () => {
 });
 
 it("should be possible to change the props of a Label", async () => {
-  let classStore: Writable<string | null> = writable(null);
-  let { container } = render(svelte`
-  <LabelProvider let:labelledby>
+  const classStore: Writable<string | null> = writable(null);
+  const { container } = render(svelte`
+  <LabelProvider name={"test"} let:labelledby>
     <div aria-labelledby={labelledby}>
       <Label class={$classStore}>I am a label</Label>
       <span>Contents</span>

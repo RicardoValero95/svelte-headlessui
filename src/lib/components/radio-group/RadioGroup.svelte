@@ -19,28 +19,25 @@
     unregisterOption(id: Option["id"]): void;
   }
 
-  const RADIO_GROUP_CONTEXT_NAME = "headlessui-radio-group-context";
-  export function useRadioGroupContext(
-    component: string
-  ): Readable<StateDefinition> {
-    const context = getContext(RADIO_GROUP_CONTEXT_NAME) as
-      | Writable<StateDefinition>
-      | undefined;
+  export const [getRadioGroupContext, setRadioGroupContext] =
+    createContextStore<StateDefinition>();
 
-    if (context === undefined) {
-      throw new Error(
-        `<${component} /> is missing a parent <RadioGroup /> component.`
-      );
-    }
+  const COMPONENT_NAME = "RadioGroup";
 
-    return context;
+  export function useRadioGroupContext(childName: string) {
+    const context = getRadioGroupContext();
+    if (context) return context;
+
+    throw new Error(
+      `<${childName} /> is missing a parent <${COMPONENT_NAME} /> component.`
+    );
   }
 </script>
 
 <script lang="ts">
-  import { createEventDispatcher, getContext, setContext } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import type { Readable, Writable} from "svelte/store";
+  import type { Writable } from "svelte/store";
   import { writable } from "svelte/store";
 
   import DescriptionProvider from "$lib/components/description/DescriptionProvider.svelte";
@@ -48,6 +45,7 @@
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import { useId } from "$lib/hooks/use-id";
   import { treeWalker } from "$lib/hooks/use-tree-walker";
+  import { createContextStore } from "$lib/internal/context-store";
   import type { SupportedAs } from "$lib/internal/elements";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { Focus, focusIn, FocusResult } from "$lib/utils/focus-management";
@@ -110,7 +108,7 @@
       options = options.filter((radio) => radio.id !== id);
     },
   });
-  setContext(RADIO_GROUP_CONTEXT_NAME, api);
+  setRadioGroupContext(api);
 
   $: api.update((obj) => {
     return {
@@ -208,7 +206,7 @@
       {...{ ...$$restProps, ...propsWeControl }}
       {as}
       use={[...use, forwardEvents]}
-      name={"RadioGroup"}
+      name={COMPONENT_NAME}
       bind:el={radioGroupRef}
       aria-labelledby={labelledby}
       aria-describedby={describedby}

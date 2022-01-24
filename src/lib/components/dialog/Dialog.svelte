@@ -3,45 +3,28 @@
     Open,
     Closed,
   }
-
   export interface StateDefinition {
-    dialogState: DialogStates;
-
+    state: DialogStates;
     titleId?: string;
-
     setTitleId(id?: string): void;
-
     close(): void;
   }
 
-  const DIALOG_CONTEXT_NAME = "headlessui-dialog-context";
+  export const [getDialogContext, setDialogContext] =
+    createContextStore<StateDefinition>();
 
-  export function useDialogContext(
-    component: string
-  ): Readable<StateDefinition> {
-    let context = getContext(DIALOG_CONTEXT_NAME) as
-      | Writable<StateDefinition>
-      | undefined;
-    if (context === undefined) {
-      throw new Error(
-        `<${component} /> is missing a parent <Dialog /> component.`
-      );
-    }
-    return context;
+  export function useDialogContext(componentName: string) {
+    const context = getDialogContext();
+    if (context) return context;
+    throw new Error(
+      `<${componentName} /> is missing a parent <Dialog /> component.`
+    );
   }
 </script>
 
 <script lang="ts">
-  import {
-    getContext,
-    setContext,
-    createEventDispatcher,
-    tick,
-    onDestroy,
-    onMount,
-  } from "svelte";
+  import { createEventDispatcher, tick, onDestroy, onMount } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import type { Readable, Writable } from "svelte/store";
   import { writable } from "svelte/store";
 
   import DescriptionProvider from "$lib/components/description/DescriptionProvider.svelte";
@@ -51,6 +34,7 @@
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import { useId } from "$lib/hooks/use-id";
   import { useInertOthers } from "$lib/hooks/use-inert-others";
+  import { createContextStore } from "$lib/internal/context-store";
   import { contains } from "$lib/internal/dom-containers";
   import type { SupportedAs } from "$lib/internal/elements";
   import ForcePortalRootContext from "$lib/internal/ForcePortalRootContext.svelte";
@@ -128,9 +112,9 @@
 
   let titleId: StateDefinition["titleId"];
 
-  let api: Writable<StateDefinition> = writable({
+  let api = writable<StateDefinition>({
     titleId,
-    dialogState,
+    state: dialogState,
     setTitleId(id?: string) {
       if (titleId === id) return;
       titleId = id;
@@ -139,12 +123,12 @@
       dispatch("close", false);
     },
   });
-  setContext(DIALOG_CONTEXT_NAME, api);
+  setDialogContext(api);
   $: api.update((obj) => {
     return {
       ...obj,
       titleId,
-      dialogState,
+      state: dialogState,
     };
   });
 

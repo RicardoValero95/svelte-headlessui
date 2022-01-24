@@ -25,30 +25,28 @@
     close(): void;
   }
 
-  const POPOVER_CONTEXT_NAME = "headlessui-popover-context";
-  export function usePopoverContext(
-    component: string
-  ): Readable<StateDefinition> {
-    let context = getContext(POPOVER_CONTEXT_NAME) as
-      | Writable<StateDefinition>
-      | undefined;
-    if (context === undefined) {
-      throw new Error(
-        `<${component} /> is missing a parent <Popover /> component.`
-      );
-    }
-    return context;
+  export const [getPopoverContext, setPopoverContext] =
+    createContextStore<StateDefinition>();
+
+  const COMPONENT_NAME = "Popover";
+  export function usePopoverContext(childName: string) {
+    const context = getPopoverContext();
+    if (context) return context;
+    throw new Error(
+      `<${childName} /> is missing a parent <${COMPONENT_NAME} /> component.`
+    );
   }
 </script>
 
 <script lang="ts">
-  import { getContext, setContext, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { get_current_component } from "svelte/internal";
-  import type { Readable, Writable } from "svelte/store";
+  import type { Writable } from "svelte/store";
   import { writable } from "svelte/store";
 
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
   import { useId } from "$lib/hooks/use-id";
+  import { createContextStore } from "$lib/internal/context-store";
   import type { SupportedAs } from "$lib/internal/elements";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import { State, useOpenClosedProvider } from "$lib/internal/open-closed";
@@ -101,7 +99,7 @@
       restoreElement?.focus();
     },
   });
-  setContext(POPOVER_CONTEXT_NAME, api);
+  setPopoverContext(api);
 
   let openClosedState: Writable<State> = writable(State.Closed);
   useOpenClosedProvider(openClosedState);
@@ -126,12 +124,12 @@
     },
   };
 
-  const groupContext = usePopoverGroupContext();
-  const registerPopover = groupContext?.registerPopover;
+  const groupContext = usePopoverGroupContext(COMPONENT_NAME);
+  const registerPopover = $groupContext?.register;
 
   function isFocusWithinPopoverGroup() {
     return (
-      groupContext?.isFocusWithinPopoverGroup() ??
+      $groupContext?.isFocusWithin() ??
       ($button?.contains(document.activeElement) ||
         $panel?.contains(document.activeElement))
     );
@@ -182,7 +180,7 @@
   {as}
   {slotProps}
   use={[...use, forwardEvents]}
-  name={"Popover"}
+  name={COMPONENT_NAME}
 >
   <slot {...slotProps} />
 </Render>

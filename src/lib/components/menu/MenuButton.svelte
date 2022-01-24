@@ -11,7 +11,7 @@
   import Render from "$lib/utils/Render.svelte";
   import { resolveButtonType } from "$lib/utils/resolve-button-type";
 
-  import { useMenuContext, MenuStates } from "./Menu.svelte";
+  import { MenuStates, useMenuContext } from "./Menu.svelte";
 
   const forwardEvents = forwardEventsBuilder(get_current_component());
   export let as: SupportedAs = "button";

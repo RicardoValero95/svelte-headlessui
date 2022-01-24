@@ -1,22 +1,30 @@
 <script lang="ts" context="module">
   export interface PopoverGroupContext {
-    registerPopover(registerbag: PopoverRegisterBag): void;
-    unregisterPopover(registerbag: PopoverRegisterBag): void;
-    isFocusWithinPopoverGroup(): boolean;
+    register(registerbag: PopoverRegisterBag): void;
+    unregister(registerbag: PopoverRegisterBag): void;
+    isFocusWithin(): boolean;
     closeOthers(buttonId: string): void;
   }
 
-  const POPOVER_GROUP_CONTEXT_NAME = "headlessui-popover-group-context";
-  export function usePopoverGroupContext(): PopoverGroupContext | undefined {
-    return getContext(POPOVER_GROUP_CONTEXT_NAME);
+  export const [getPopoverGroupContext, setPopoverGroupContext] =
+    createContextStore<PopoverGroupContext>();
+
+  const COMPONENT_NAME = "PopoverGroup";
+  export function usePopoverGroupContext(childName: string) {
+    const context = getPopoverGroupContext();
+    if (context) return context;
+    // throw new Error(
+    //   `<${childName} /> is missing a parent <${COMPONENT_NAME} /> component.`
+    // );
   }
 </script>
 
 <script lang="ts">
-  import { getContext, setContext } from "svelte";
   import { get_current_component } from "svelte/internal";
+  import { writable } from "svelte/store";
 
   import type { HTMLActionArray } from "$lib/hooks/use-actions";
+  import { createContextStore } from "$lib/internal/context-store";
   import type { SupportedAs } from "$lib/internal/elements";
   import { forwardEventsBuilder } from "$lib/internal/forwardEventsBuilder";
   import Render from "$lib/utils/Render.svelte";
@@ -31,18 +39,18 @@
   let groupRef: HTMLDivElement | undefined;
   let popovers: PopoverRegisterBag[] = [];
 
-  function unregisterPopover(registerBag: PopoverRegisterBag) {
+  function unregister(registerBag: PopoverRegisterBag) {
     popovers = popovers.filter((bag) => bag != registerBag);
   }
 
-  function registerPopover(registerBag: PopoverRegisterBag) {
+  function register(registerBag: PopoverRegisterBag) {
     popovers = [...popovers, registerBag];
     return () => {
-      unregisterPopover(registerBag);
+      unregister(registerBag);
     };
   }
 
-  function isFocusWithinPopoverGroup() {
+  function isFocusWithin() {
     let element = document.activeElement as HTMLElement;
 
     if (groupRef?.contains(element)) return true;
@@ -62,19 +70,21 @@
     }
   }
 
-  setContext(POPOVER_GROUP_CONTEXT_NAME, {
-    unregisterPopover,
-    registerPopover,
-    isFocusWithinPopoverGroup,
-    closeOthers,
-  });
+  setPopoverGroupContext(
+    writable({
+      unregister,
+      register,
+      isFocusWithin,
+      closeOthers,
+    })
+  );
 </script>
 
 <Render
   {...$$restProps}
   {as}
   use={[...use, forwardEvents]}
-  name={"PopoverGroup"}
+  name={COMPONENT_NAME}
   bind:el={groupRef}
 >
   <slot />
